@@ -16,6 +16,7 @@
   --green:#8CAA8A;
   --green-deep:#587C5C;
   --mustard:#EFBE4A;
+  --mustard-deep:#C99A2E;
   --terracotta:#E17F5A;
   --terracotta-deep:#C25D3B;
   --purple:#B7A6D9;
@@ -60,12 +61,12 @@ body{
 .page-topbar{ display:flex; justify-content:space-between; align-items:center; font-family:'Baloo 2', sans-serif; font-size:11.5px; color:var(--pink-deep); letter-spacing:1px; margin-bottom:8px; font-weight:700; }
 .page-topbar .chip{ background:var(--pink); border:1.5px solid var(--line); padding:3px 12px; border-radius:20px; font-weight:800; color:var(--ink); }
 
-h1.page-title{ font-family:'Baloo 2', sans-serif; font-weight:800; font-size:32px; color:var(--ink); margin:2px 0 2px 0; line-height:1.25; }
-h1.page-title small{ display:block; font-family:'Noto Sans TC'; font-size:13.5px; font-weight:500; color:var(--sky-deep); margin-top:6px; }
+h1.page-title{ font-family:'Baloo 2', sans-serif; font-weight:800; font-size:36px; color:var(--ink); margin:2px 0 2px 0; line-height:1.2; }
+h1.page-title small{ display:block; font-family:'Noto Sans TC'; font-size:12.5px; font-weight:700; color:var(--sky-deep); margin-top:7px; letter-spacing:0.5px; }
 .squiggle{width:64px; height:10px; margin:6px 0 4px 0; display:block;}
-h2.section-title{ font-family:'Baloo 2', sans-serif; font-weight:800; font-size:18px; color:var(--terracotta-deep); margin:24px 0 10px 0; display:flex; align-items:center; gap:8px; }
-h3.sub-title{ font-size:14.5px; font-weight:800; color:var(--sky-deep); margin:14px 0 6px 0; }
-p{line-height:1.85; font-size:14px; margin:7px 0; color:#413c31;}
+h2.section-title{ font-family:'Baloo 2', sans-serif; font-weight:800; font-size:20px; color:var(--terracotta-deep); margin:24px 0 10px 0; display:flex; align-items:center; gap:8px; }
+h3.sub-title{ font-size:14px; font-weight:800; color:var(--sky-deep); margin:14px 0 6px 0; text-transform:uppercase; letter-spacing:0.5px; }
+p{line-height:1.85; font-size:13.5px; margin:7px 0; color:#413c31;}
 .lead{font-size:15.5px; color:var(--ink); font-weight:500;}
 
 table{ width:100%; border-collapse:collapse; margin:10px 0 18px 0; font-size:13px; background:#fff; border-radius:14px; overflow:hidden; border:2px solid var(--line); }
@@ -92,14 +93,32 @@ tr:nth-child(even) td{background:#FBF6E9;}
 .pill-btn{ display:inline-flex; align-items:center; justify-content:center; background:var(--green); color:#fff; border:2px solid var(--line); border-radius:999px; padding:6px 16px; font-weight:800; font-size:12.5px; cursor:pointer; box-shadow:2px 2px 0 var(--line); transition:transform .1s; }
 .pill-btn:hover{transform:translate(-1px,-1px); box-shadow:3px 3px 0 var(--line);}
 
-/* ============ highlight cards ============ */
-.highlight-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:12px 0 8px 0; }
+/* ============ highlight cards (colorful photo-tile style) ============ */
+.highlight-grid{ display:grid; grid-template-columns:1fr 1fr; gap:13px; margin:12px 0 8px 0; }
 @media (max-width:760px){.highlight-grid{grid-template-columns:1fr;}}
-.highlight-card{ background:#FBF6E9; border:2px solid var(--line); border-radius:16px; padding:13px 15px; }
+.highlight-card{ background:#fff; border:2px solid var(--line); border-radius:16px; padding:0; overflow:hidden; }
 .highlight-card.wide{grid-column:1/-1;}
-.highlight-card .hc-head{ display:flex; align-items:center; gap:8px; font-weight:800; color:var(--green-deep); font-size:14px; margin-bottom:5px; }
-.highlight-card .hc-icon{ font-size:18px; }
-.highlight-card p{margin:0; font-size:13px; line-height:1.75;}
+.highlight-card .hc-head{ display:flex; align-items:center; gap:8px; font-weight:800; color:#fff; font-size:14.5px; padding:11px 14px; }
+.highlight-card .hc-icon{ font-size:21px; }
+.highlight-card p{margin:0; font-size:12.5px; line-height:1.7; padding:10px 14px 13px 14px;}
+.highlight-grid .highlight-card:nth-child(6n+1) .hc-head{background:var(--terracotta);}
+.highlight-grid .highlight-card:nth-child(6n+2) .hc-head{background:var(--green-deep);}
+.highlight-grid .highlight-card:nth-child(6n+3) .hc-head{background:var(--sky-deep);}
+.highlight-grid .highlight-card:nth-child(6n+4) .hc-head{background:var(--pink-deep);}
+.highlight-grid .highlight-card:nth-child(6n+5) .hc-head{background:var(--mustard-deep);}
+.highlight-grid .highlight-card:nth-child(6n+6) .hc-head{background:var(--purple);}
+
+/* ============ day banner (big number, rotating colors) ============ */
+.day-banner{ position:relative; border:2.5px solid var(--line); border-radius:22px; padding:18px 22px; margin-bottom:16px; overflow:hidden; color:#fff; }
+.day-banner .db-num{ font-family:'Baloo 2'; font-weight:800; font-size:76px; position:absolute; right:10px; top:-14px; opacity:0.28; line-height:1; color:#fff; }
+.day-banner .db-tag{font-family:'Baloo 2'; font-size:11px; letter-spacing:3px; font-weight:700; opacity:0.9;}
+.day-banner h1{font-family:'Baloo 2'; font-weight:800; font-size:28px; margin:4px 0; color:#fff; position:relative; z-index:2;}
+.day-banner .db-meta{font-size:12.5px; display:flex; gap:8px; flex-wrap:wrap; margin-top:6px; position:relative; z-index:2;}
+.day-banner .db-meta span{background:rgba(255,255,255,0.24); padding:3px 12px; border-radius:12px; font-weight:700;}
+
+/* ============ section divider (decorative) ============ */
+.section-divider{ display:flex; align-items:center; justify-content:center; margin:16px 0; }
+.section-divider .sd-circle{ width:34px; height:34px; border-radius:50%; background:var(--mustard); border:2.5px solid var(--line); display:flex; align-items:center; justify-content:center; font-weight:900; font-size:15px; }
 
 /* ============ timeline ============ */
 .timeline{ margin:14px 0 20px 0; position:relative; padding-left:26px; }
@@ -169,16 +188,15 @@ tr:nth-child(even) td{background:#FBF6E9;}
 .map-legend span{ display:inline-flex; align-items:center; gap:5px; font-weight:700; }
 .map-legend i{ width:14px; height:5px; border-radius:3px; display:inline-block; }
 
-/* ============ COVER ============ */
-.cover-page{ position:relative; height:100%; overflow:hidden; background:var(--bg); }
-.cover-blob-pink{ position:absolute; top:-60px; right:-60px; width:320px; height:320px; background:var(--pink); border-radius:50%; }
-.cover-blob-green{ position:absolute; bottom:-80px; left:-80px; width:320px; height:320px; background:var(--green); border-radius:50%; opacity:0.85; }
-.cover-star{ position:absolute; }
-.cover-content{ position:relative; z-index:3; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; padding:52px 30px 0 30px; text-align:center; }
-.cover-content .cover-sub{ font-family:'Baloo 2'; font-weight:700; font-size:13px; letter-spacing:4px; color:var(--green-deep); }
-.cover-content h1{ font-family:'Baloo 2'; font-weight:800; font-size:54px; color:var(--ink); margin:8px 0 0 0; line-height:1.22; }
-.cover-dates{ margin-top:16px; background:var(--terracotta); color:#fff; font-weight:800; font-family:'Baloo 2'; padding:8px 24px; border:2.5px solid var(--line); border-radius:30px; font-size:15px; letter-spacing:1px; box-shadow:3px 3px 0 var(--line); }
-.cover-illustration{ position:absolute; bottom:0; left:50%; transform:translateX(-50%); width:94%; max-width:660px; z-index:2; }
+/* ============ COVER (full-bleed landscape illustration) ============ */
+.cover-page{ position:relative; height:100%; overflow:hidden; background:#FBF1DE; }
+.cover-page .cover-illustration{ position:absolute; inset:0; width:100%; height:100%; }
+.cover-page .cover-illustration svg{ width:100%; height:100%; display:block; }
+.cover-overlay{ position:relative; z-index:3; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; padding:40px 30px 0 30px; text-align:center; pointer-events:none; }
+.cover-title-panel{ background:rgba(251,241,222,0.88); border:2.5px solid var(--line); border-radius:24px; padding:16px 30px; box-shadow:4px 4px 0 rgba(34,31,25,0.15); }
+.cover-title-panel .cover-sub{ font-family:'Baloo 2'; font-weight:700; font-size:12px; letter-spacing:4px; color:var(--green-deep); }
+.cover-title-panel h1{ font-family:'Baloo 2'; font-weight:800; font-size:44px; color:var(--ink); margin:6px 0 0 0; line-height:1.2; }
+.cover-dates{ margin-top:18px; background:var(--terracotta); color:#fff; font-weight:800; font-family:'Baloo 2'; padding:8px 24px; border:2.5px solid var(--line); border-radius:30px; font-size:14px; letter-spacing:1px; box-shadow:3px 3px 0 var(--line); pointer-events:auto; }
 
 /* ============ controls ============ */
 .controls{ position:absolute; bottom:18px; left:50%; transform:translateX(-50%); display:flex; align-items:center; gap:16px; background:#FFFCF3; border:2.5px solid var(--line); padding:9px 20px; border-radius:40px; z-index:10; box-shadow:4px 4px 0 rgba(34,31,25,0.15); }
@@ -216,49 +234,106 @@ tr:nth-child(even) td{background:#FBF6E9;}
   </div>
 </div>
 <script>
-// ---------- helper: one flat folk-art person (black outline, new palette) ----------
-function person(x, bodyColor, hairColor, hairStyle, armUp, skin){
-  skin = skin || '#F2C29A';
-  const S = '#221F19';
-  const armR = armUp ? `M${x+34} 150 Q${x+50} 118 ${x+40} 100` : `M${x+34} 150 Q${x+42} 168 ${x+34} 182`;
-  let hair = '';
-  if(hairStyle === 'twin'){
-    hair = `<circle cx="${x-4}" cy="70" r="9" fill="${hairColor}" stroke="${S}" stroke-width="2"/><circle cx="${x+34}" cy="70" r="9" fill="${hairColor}" stroke="${S}" stroke-width="2"/><path d="M${x-2} 48 Q${x+15} 30 ${x+32} 48 Q${x+34} 66 ${x+15} 68 Q${x-4} 66 ${x-2} 48Z" fill="${hairColor}" stroke="${S}" stroke-width="2"/>`;
-  } else if(hairStyle === 'pony'){
-    hair = `<path d="M${x+30} 55 Q${x+48} 60 ${x+42} 85" stroke="${hairColor}" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M${x-2} 48 Q${x+15} 28 ${x+32} 48 Q${x+34} 66 ${x+15} 68 Q${x-4} 66 ${x-2} 48Z" fill="${hairColor}" stroke="${S}" stroke-width="2"/>`;
-  } else if(hairStyle === 'bob'){
-    hair = `<path d="M${x-4} 50 Q${x+15} 26 ${x+34} 50 Q${x+36} 74 ${x+15} 72 Q${x-6} 74 ${x-4} 50Z" fill="${hairColor}" stroke="${S}" stroke-width="2"/>`;
-  } else if(hairStyle === 'bun'){
-    hair = `<circle cx="${x+15}" cy="34" r="8" fill="${hairColor}" stroke="${S}" stroke-width="2"/><path d="M${x-3} 50 Q${x+15} 30 ${x+33} 50 Q${x+34} 66 ${x+15} 66 Q${x-4} 66 ${x-3} 50Z" fill="${hairColor}" stroke="${S}" stroke-width="2"/>`;
-  } else if(hairStyle === 'short'){
-    hair = `<path d="M${x-4} 48 Q${x+15} 28 ${x+34} 48 Q${x+33} 56 ${x+15} 56 Q${x-3} 56 ${x-4} 48Z" fill="${hairColor}" stroke="${S}" stroke-width="2"/>`;
-  } else if(hairStyle === 'cap'){
-    hair = `<path d="M${x-6} 50 Q${x+15} 26 ${x+36} 50 L${x+40} 54 Q${x+15} 44 ${x-10} 54 Z" fill="${hairColor}" stroke="${S}" stroke-width="2"/>`;
+// ---------- helper: scattered dot texture (deterministic, no Math.random) ----------
+function dotField(cx, cy, w, h, n, color, rMin, rMax){
+  let out = '';
+  for(let i=0;i<n;i++){
+    const fx = (Math.sin(i*12.9898+cx)*43758.5453) % 1;
+    const fy = (Math.sin(i*78.233+cy)*12543.123) % 1;
+    const px = cx + ((fx<0?-fx:fx)) * w;
+    const py = cy + ((fy<0?-fy:fy)) * h;
+    const r = rMin + (((Math.sin(i*3.7)+1)/2) * (rMax-rMin));
+    out += `<circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="${r.toFixed(1)}" fill="${color}"/>`;
   }
-  return `<g>
-    <ellipse cx="${x+15}" cy="196" rx="30" ry="7" fill="#221F19" opacity="0.10"/>
-    <path d="${armR}" stroke="${skin}" stroke-width="11" stroke-linecap="round" fill="none"/>
-    <path d="${armR}" stroke="${S}" stroke-width="13" stroke-linecap="round" fill="none" opacity="0" />
-    <path d="M${x-4} 150 Q${x-16} 172 ${x-6} 190" stroke="${skin}" stroke-width="11" stroke-linecap="round" fill="none"/>
-    <path d="M${x-6} 98 Q${x-14} 130 ${x-2} 160 L${x+32} 160 Q${x+44} 130 ${x+36} 98 Q${x+15} 88 ${x-6} 98Z" fill="${bodyColor}" stroke="${S}" stroke-width="2.5"/>
-    <rect x="${x-2}" y="152" width="14" height="34" rx="6" fill="#3a3126" stroke="${S}" stroke-width="2"/>
-    <rect x="${x+18}" y="152" width="14" height="34" rx="6" fill="#3a3126" stroke="${S}" stroke-width="2"/>
-    <circle cx="${x+15}" cy="70" r="24" fill="${skin}" stroke="${S}" stroke-width="2.5"/>
-    ${hair}
-    <circle cx="${x+7}" cy="72" r="2.4" fill="${S}"/>
-    <circle cx="${x+23}" cy="72" r="2.4" fill="${S}"/>
-    <path d="M${x+8} 80 Q${x+15} 85 ${x+22} 80" stroke="${S}" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-  </g>`;
+  return out;
 }
 
-const FAMILY_ILLUSTRATION = `
-<svg viewBox="0 0 800 230" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto; display:block;">
-  ${person(60, '#E17F5A', '#3a2a1e', 'short', false)}
-  ${person(140, '#EFBE4A', '#5c3a22', 'bob', false)}
-  ${person(230, '#DD8FA3', '#2e2418', 'twin', true)}
-  ${person(430, '#8FBFCF', '#402d1f', 'pony', true)}
-  ${person(540, '#F1CFD6', '#6b4226', 'bun', false)}
-  ${person(620, '#8CAA8A', '#2e2418', 'cap', false)}
+// ---------- full-bleed autumn landscape illustration for the cover (no people) ----------
+const LANDSCAPE_ILLUSTRATION = `
+<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+  <rect width="800" height="500" fill="#FDF3D9"/>
+  <circle cx="120" cy="95" r="58" fill="#E9E36B" opacity="0.9"/>
+  <circle cx="120" cy="95" r="58" fill="none" stroke="#221F19" stroke-width="2" opacity="0.15"/>
+
+  <!-- back mountain ridge -->
+  <path d="M0 190 L90 110 L150 160 L230 80 L300 150 L380 95 L470 165 L560 100 L650 160 L730 120 L800 175 L800 260 L0 260 Z" fill="#BFE0DA"/>
+  <path d="M150 160 L230 80 L300 150" fill="#FFFFFF" opacity="0.85"/>
+  <path d="M380 95 L470 165" stroke="#FFFFFF" stroke-width="14" opacity="0.7"/>
+  <path d="M560 100 L650 160" stroke="#FFFFFF" stroke-width="10" opacity="0.6"/>
+
+  <!-- mid mountain ridge (teal) -->
+  <path d="M0 240 L100 175 L190 225 L280 155 L370 220 L460 165 L560 230 L660 175 L800 235 L800 320 L0 320 Z" fill="#5FA9A0"/>
+  <path d="M190 225 L280 155 L370 220" fill="#E9F4EC" opacity="0.55"/>
+
+  <!-- pink blossom hillside accent -->
+  <path d="M560 230 L660 175 L740 220 L800 200 L800 320 L560 320 Z" fill="#EFC9DA" opacity="0.7"/>
+  ${dotField(600, 240, 190, 70, 40, '#DD8FA3', 3, 6)}
+
+  <!-- rolling meadow hills -->
+  <path d="M0 300 Q120 250 240 300 T480 300 T800 300 L800 500 L0 500 Z" fill="#C9D96B"/>
+  ${dotField(30, 320, 350, 130, 70, '#EFBE4A', 2.5, 5)}
+  ${dotField(420, 320, 380, 130, 70, '#8CAA8A', 2.5, 5)}
+
+  <path d="M0 360 Q150 320 300 365 T600 360 T800 375 L800 500 L0 500 Z" fill="#9CC169"/>
+  ${dotField(60, 380, 340, 100, 55, '#FDF3D9', 2, 4)}
+  ${dotField(460, 385, 320, 100, 55, '#EFBE4A', 2, 4)}
+
+  <!-- winding road -->
+  <path d="M-20 470 C 120 430, 140 380, 260 360 S 420 300, 520 290 S 700 250, 830 230" fill="none" stroke="#F4EFE1" stroke-width="26" stroke-linecap="round"/>
+  <path d="M-20 470 C 120 430, 140 380, 260 360 S 420 300, 520 290 S 700 250, 830 230" fill="none" stroke="#221F19" stroke-width="26" stroke-linecap="round" opacity="0.12"/>
+  <path d="M-20 470 C 120 430, 140 380, 260 360 S 420 300, 520 290 S 700 250, 830 230" fill="none" stroke="#EFBE4A" stroke-width="3" stroke-dasharray="10 10" opacity="0.7"/>
+
+  <!-- little travel van on the road -->
+  <g transform="translate(330,335) rotate(-14)">
+    <rect x="0" y="0" width="58" height="26" rx="8" fill="#E17F5A" stroke="#221F19" stroke-width="2.5"/>
+    <rect x="38" y="-14" width="24" height="20" rx="6" fill="#E17F5A" stroke="#221F19" stroke-width="2.5"/>
+    <rect x="42" y="-9" width="14" height="10" rx="2" fill="#BFE0DA"/>
+    <circle cx="14" cy="27" r="7" fill="#221F19"/>
+    <circle cx="46" cy="27" r="7" fill="#221F19"/>
+    <circle cx="14" cy="27" r="3" fill="#F4EFE1"/>
+    <circle cx="46" cy="27" r="3" fill="#F4EFE1"/>
+  </g>
+
+  <!-- larch / conifer clusters -->
+  <g>
+    <path d="M120 420 L134 380 L148 420 Z" fill="#8CAA8A" stroke="#221F19" stroke-width="2"/>
+    <path d="M132 400 L146 365 L160 400 Z" fill="#7C9C79" stroke="#221F19" stroke-width="2"/>
+    <path d="M600 400 L616 355 L632 400 Z" fill="#8CAA8A" stroke="#221F19" stroke-width="2"/>
+    <path d="M660 415 L674 378 L688 415 Z" fill="#7C9C79" stroke="#221F19" stroke-width="2"/>
+  </g>
+
+  <!-- foreground flower bed -->
+  <rect x="0" y="440" width="800" height="60" fill="#B7CB5E"/>
+  ${dotField(20, 445, 760, 45, 90, '#8CAA8A', 2, 4)}
+
+  <g>
+    <!-- big pink flower -->
+    <g transform="translate(90,468)">
+      <circle cx="0" cy="-14" r="12" fill="#EFC9DA" stroke="#221F19" stroke-width="2"/>
+      <circle cx="13" cy="-4" r="12" fill="#EFC9DA" stroke="#221F19" stroke-width="2"/>
+      <circle cx="8" cy="12" r="12" fill="#EFC9DA" stroke="#221F19" stroke-width="2"/>
+      <circle cx="-8" cy="12" r="12" fill="#EFC9DA" stroke="#221F19" stroke-width="2"/>
+      <circle cx="-13" cy="-4" r="12" fill="#EFC9DA" stroke="#221F19" stroke-width="2"/>
+      <circle cx="0" cy="0" r="10" fill="#EFBE4A" stroke="#221F19" stroke-width="2"/>
+    </g>
+    <!-- big yellow flower -->
+    <g transform="translate(700,478)">
+      <circle cx="0" cy="-13" r="11" fill="#F6E27A" stroke="#221F19" stroke-width="2"/>
+      <circle cx="12" cy="-4" r="11" fill="#F6E27A" stroke="#221F19" stroke-width="2"/>
+      <circle cx="7" cy="11" r="11" fill="#F6E27A" stroke="#221F19" stroke-width="2"/>
+      <circle cx="-7" cy="11" r="11" fill="#F6E27A" stroke="#221F19" stroke-width="2"/>
+      <circle cx="-12" cy="-4" r="11" fill="#F6E27A" stroke="#221F19" stroke-width="2"/>
+      <circle cx="0" cy="0" r="9" fill="#E17F5A" stroke="#221F19" stroke-width="2"/>
+    </g>
+    <g transform="translate(230,485) scale(0.75)">
+      <circle cx="0" cy="-13" r="11" fill="#F1CFD6" stroke="#221F19" stroke-width="2"/>
+      <circle cx="12" cy="-4" r="11" fill="#F1CFD6" stroke="#221F19" stroke-width="2"/>
+      <circle cx="7" cy="11" r="11" fill="#F1CFD6" stroke="#221F19" stroke-width="2"/>
+      <circle cx="-7" cy="11" r="11" fill="#F1CFD6" stroke="#221F19" stroke-width="2"/>
+      <circle cx="-12" cy="-4" r="11" fill="#F1CFD6" stroke="#221F19" stroke-width="2"/>
+      <circle cx="0" cy="0" r="9" fill="#EFBE4A" stroke="#221F19" stroke-width="2"/>
+    </g>
+  </g>
 </svg>`;
 
 const STAR_SVG = `<svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 1 L14.5 8.5 L22 9.5 L16.5 14.7 L18 22 L12 18.3 L6 22 L7.5 14.7 L2 9.5 L9.5 8.5 Z" fill="#EFBE4A" stroke="#221F19" stroke-width="1.2"/></svg>`;
@@ -308,17 +383,14 @@ const PAGES = [];
 /* ============ COVER ============ */
 PAGES.push({chapter:'封面', navLabel:'封面', num:'', isCover:true, html:`
 <div class="cover-page">
-  <div class="cover-blob-pink"></div>
-  <div class="cover-blob-green"></div>
-  <div class="cover-star" style="top:16%; left:12%;">${STAR_SVG}</div>
-  <div class="cover-star" style="top:26%; right:20%;">${STAR_SVG}</div>
-  <div class="cover-star" style="top:44%; left:8%;">${STAR_SVG}</div>
-  <div class="cover-content">
-    <div class="cover-sub">NORTH XINJIANG · GOLDEN AUTUMN</div>
-    <h1>北疆金秋<br>大冒險</h1>
+  <div class="cover-illustration">${LANDSCAPE_ILLUSTRATION}</div>
+  <div class="cover-overlay">
+    <div class="cover-title-panel">
+      <div class="cover-sub">NORTH XINJIANG · GOLDEN AUTUMN</div>
+      <h1>北疆金秋大冒險</h1>
+    </div>
     <div class="cover-dates">2026.09.20 — 09.29</div>
   </div>
-  <div class="cover-illustration">${FAMILY_ILLUSTRATION}</div>
 </div>`});
 
 /* ============ PART 1：行前須知 ============ */
@@ -329,21 +401,20 @@ PAGES.push({chapter:'行前須知', navLabel:'證件・網路', num:1, html:`
 <table><tr><th>證件</th><th>檢查重點</th></tr>
 <tr><td>台胞證</td><td>效期需超過 2027/3/31（入境後至少6個月）</td></tr>
 <tr><td>護照</td><td>效期需超過 2027/3/31</td></tr>
-<tr><td>邊防證</td><td>白哈巴在中哈邊境，領隊協助辦理。</td></tr>
+<tr><td>邊防證</td><td>白哈巴在中哈邊境，需要邊防證才能進入；在白哈巴時領隊協助辦理。</td></tr>
 </table>
 
 <h2 class="section-title">📱 網路與通訊</h2>
 <div class="highlight-grid">
 <div class="highlight-card"><div class="hc-head"><span class="hc-icon">🚫</span>VPN 必備</div><p>LINE、Facebook、Instagram 在新疆連不上，出發前先下載安裝 VPN 並測試可用。</p></div>
 <div class="highlight-card"><div class="hc-head"><span class="hc-icon">📶</span>手機上網</div><p>建議買 eSIM（中港澳方案），或到烏魯木齊機場買中國移動預付卡（約100元人民幣/10GB）。</p></div>
-<div class="highlight-card wide"><div class="hc-head"><span class="hc-icon">💬</span>跟家人報平安</div><p>用微信（WeChat），台灣家人請先下載、註冊、加好友。導遊會建立微信群組，所有行程訊息都會在裡面公告。</p></div>
+<div class="highlight-card wide"><div class="hc-head"><span class="hc-icon">💬</span>跟家人報平安</div><p>用微信（WeChat），台灣家人請先下載、註冊、加好友。領隊會建立微信群組，所有行程訊息都會在裡面公告。</p></div>
 </div>
 `});
 
 PAGES.push({chapter:'行前須知', navLabel:'機票・行程總覽', num:2, html:`
 <h1 class="page-title">機票與行程總覽${SQUIGGLE_SVG}<small>去程航班、路線地圖、日出日落</small></h1>
-
-<h2 class="section-title">✈️ 去程航班</h2>
+<h2 class="section-title">✈️ 航班資訊</h2>
 <div class="flight-card">
   <div class="flight-route">桃園 T1 <span class="fr-arrow">✈</span> 香港 T1 <span class="flight-time">12:00 → 13:50</span></div>
   <div class="flight-meta"><span>大灣區航空 HB703</span><span>機型 73A</span><span>飛行 1h50m</span><span>轉機 5 小時</span><span>手提 7KG／托運 20KG</span><span>行李直掛</span><span>機上不供餐</span></div>
@@ -559,15 +630,21 @@ PAGES.push({chapter:'行前須知', navLabel:'拍照・安全須知', num:10, ht
 
 /* ============ PART 2：每日行程 ============ */
 
+const DAY_COLORS = ['#E17F5A','#587C5C','#4C8FA3','#DD8FA3','#C99A2E','#B7A6D9'];
+let dayColorIdx = 0;
+
 function dayPage(opts){
+  const color = DAY_COLORS[dayColorIdx % DAY_COLORS.length];
+  dayColorIdx++;
   return `
-<div class="day-hero">
-  <div class="dh-tag">${opts.date}</div>
+<div class="day-banner" style="background:${color};">
+  <div class="db-num">${opts.dayNum}</div>
+  <div class="db-tag">${opts.date}</div>
   <h1>${opts.title}</h1>
-  <div class="dh-meta"><span>${opts.route}</span>${opts.carTime ? `<span>🚌 車程 ${opts.carTime}</span>` : ''}</div>
+  <div class="db-meta"><span>📍 ${opts.route}</span>${opts.carTime ? `<span>🚌 車程 ${opts.carTime}</span>` : ''}</div>
 </div>
 ${opts.highlights}
-${opts.food || opts.hotel ? `<div class="day-info-grid">
+${opts.food || opts.hotel ? `<div class="section-divider"><div class="sd-circle">✈</div></div><div class="day-info-grid">
   ${opts.food ? `<div class="info-card food"><div class="ic-title">🍜 吃什麼</div>${opts.food}</div>` : ''}
   ${opts.hotel ? `<div class="info-card hotel"><div class="ic-title">🏨 住宿</div>${opts.hotel}</div>` : ''}
 </div>` : ''}
@@ -577,7 +654,7 @@ ${opts.egg ? `<div class="egg-task"><div class="egg-label">📌 彩蛋任務：$
 }
 
 PAGES.push({chapter:'每日行程', navLabel:'Day0-1 出發→烏魯木齊', num:11, html: dayPage({
-  title:'出發 → 烏魯木齊', date:'9/20（日）–9/21（一）', route:'桃園→香港→烏魯木齊',
+  dayNum:'00', title:'出發 → 烏魯木齊', date:'9/20（日）–9/21（一）', route:'桃園→香港→烏魯木齊',
   highlights:`<div class="highlight-grid">
   <div class="highlight-card wide"><div class="hc-head">✈️ 行程</div><p>9/20 桃園→香港（約2h），香港轉機5h。9/21 香港→烏魯木齊（約5h），下午抵達，入住飯店、逛和田二街夜市。</p></div>
   <div class="highlight-card"><div class="hc-head">🌙 國際大巴扎</div><p>步行15分鐘，晚上燈光很美，逛乾果、工藝品</p></div>
@@ -591,7 +668,7 @@ PAGES.push({chapter:'每日行程', navLabel:'Day0-1 出發→烏魯木齊', num
 })});
 
 PAGES.push({chapter:'每日行程', navLabel:'Day2 沙漠公路→阿勒泰', num:12, html: dayPage({
-  title:'沙漠公路 → 阿勒泰', date:'9/22（二）', route:'烏魯木齊→S21→克拉美麗→烏倫古湖→阿勒泰', carTime:'約7小時',
+  dayNum:'02', title:'沙漠公路 → 阿勒泰', date:'9/22（二）', route:'烏魯木齊→S21→克拉美麗→烏倫古湖→阿勒泰', carTime:'約7小時',
   highlights:`<div class="highlight-grid">
   <div class="highlight-card"><div class="hc-head">🏜️ S21沙漠公路</div><p>穿越古爾班通古特沙漠，路邊防沙網格，下車拍照注意來車</p></div>
   <div class="highlight-card"><div class="hc-head">🐫 克拉美麗沙漠公園</div><p>可自費騎駱駝或沙漠越野車，沙丘適合跳躍照</p></div>
@@ -605,7 +682,7 @@ PAGES.push({chapter:'每日行程', navLabel:'Day2 沙漠公路→阿勒泰', nu
 })});
 
 PAGES.push({chapter:'每日行程', navLabel:'Day3 阿禾公路', num:13, html: dayPage({
-  title:'阿禾公路 → 托勒海特', date:'9/23（三）', route:'阿勒泰→阿禾公路→烏希里克→野卡峽→通巴森林→托勒海特', carTime:'約5小時',
+  dayNum:'03', title:'阿禾公路 → 托勒海特', date:'9/23（三）', route:'阿勒泰→阿禾公路→烏希里克→野卡峽→通巴森林→托勒海特', carTime:'約5小時',
   highlights:`<div class="highlight-grid">
   <div class="highlight-card"><div class="hc-head">🌲 阿禾公路</div><p>2023年通車的網紅公路，9月底金黃落葉松滿山，隨便一個彎道都像明信片</p></div>
   <div class="highlight-card"><div class="hc-head">🐃 烏希里克</div><p>濕地草原，可能有氂牛出沒</p></div>
@@ -620,7 +697,7 @@ PAGES.push({chapter:'每日行程', navLabel:'Day3 阿禾公路', num:13, html: 
 })});
 
 PAGES.push({chapter:'每日行程', navLabel:'Day4 喀納斯→白哈巴', num:14, html: dayPage({
-  title:'喀納斯 → 白哈巴', date:'9/24（四）', route:'禾木→喀納斯湖→觀魚台→白哈巴',
+  dayNum:'04', title:'喀納斯 → 白哈巴', date:'9/24（四）', route:'禾木→喀納斯湖→觀魚台→白哈巴',
   highlights:`<div class="highlight-grid">
   <div class="highlight-card"><div class="hc-head">🏘️ 禾木村</div><p>圖瓦人木屋聚落，晨霧中最美</p></div>
   <div class="highlight-card"><div class="hc-head">🌊 喀納斯湖</div><p>湖面翠綠帶藍，傳說湖怪其實是哲羅鮭</p></div>
@@ -635,7 +712,7 @@ PAGES.push({chapter:'每日行程', navLabel:'Day4 喀納斯→白哈巴', num:1
 })});
 
 PAGES.push({chapter:'每日行程', navLabel:'Day5 三灣→克拉瑪依', num:15, html: dayPage({
-  title:'三灣 → 布爾津 → 克拉瑪依', date:'9/25（五）', route:'白哈巴→喀納斯三灣→布爾津→克拉瑪依', carTime:'約6小時',
+  dayNum:'05', title:'三灣 → 布爾津 → 克拉瑪依', date:'9/25（五）', route:'白哈巴→喀納斯三灣→布爾津→克拉瑪依', carTime:'約6小時',
   highlights:`<div class="highlight-grid">
   <div class="highlight-card"><div class="hc-head">☁️ 神仙灣</div><p>清晨雲霧飄湖面，如仙境</p></div>
   <div class="highlight-card"><div class="hc-head">🌙 月亮灣</div><p>S形河灣，喀納斯最經典畫面</p></div>
@@ -650,7 +727,7 @@ PAGES.push({chapter:'每日行程', navLabel:'Day5 三灣→克拉瑪依', num:1
 })});
 
 PAGES.push({chapter:'每日行程', navLabel:'Day6 賽里木湖', num:16, html: dayPage({
-  title:'賽里木湖', date:'9/26（六）', route:'克拉瑪依→賽里木湖（自駕環湖）', carTime:'約6小時',
+  dayNum:'06', title:'賽里木湖', date:'9/26（六）', route:'克拉瑪依→賽里木湖（自駕環湖）', carTime:'約6小時',
   highlights:`<div class="highlight-grid">
   <div class="highlight-card"><div class="hc-head">🚗 自駕環湖</div><p>約90公里，想停就停，金黃草地＋寶石藍湖水＋雪山白三色絕配</p></div>
   <div class="highlight-card"><div class="hc-head">💠 湖水顏色</div><p>新疆海拔最高、面積最大的高山湖泊，能見度12公尺</p></div>
@@ -665,7 +742,7 @@ PAGES.push({chapter:'每日行程', navLabel:'Day6 賽里木湖', num:16, html: 
 })});
 
 PAGES.push({chapter:'每日行程', navLabel:'Day7 賽湖日出→奎屯', num:17, html: dayPage({
-  title:'賽湖日出 → 奎屯', date:'9/27（日）', route:'賽里木湖日出→二進賽湖→奎屯', carTime:'約5小時',
+  dayNum:'07', title:'賽湖日出 → 奎屯', date:'9/27（日）', route:'賽里木湖日出→二進賽湖→奎屯', carTime:'約5小時',
   highlights:`<div class="highlight-grid">
   <div class="highlight-card wide"><div class="hc-head">🌅 賽里木湖日出（約07:30）</div><p>太陽從雪山後升起，湖面金黃→粉色→藍色，建議全員早起，不看會後悔！</p></div>
   <div class="highlight-card"><div class="hc-head">🪞 二進賽湖</div><p>清晨無風時湖面像鏡子，雪山倒影超清楚</p></div>
@@ -679,7 +756,7 @@ PAGES.push({chapter:'每日行程', navLabel:'Day7 賽湖日出→奎屯', num:1
 })});
 
 PAGES.push({chapter:'每日行程', navLabel:'Day8-9 丹霞→回家', num:18, html: dayPage({
-  title:'丹霞 → 回家', date:'9/28（一）–9/29（二）', route:'奎屯→S101丹霞→肯斯瓦特→烏魯木齊→回程', carTime:'約4小時',
+  dayNum:'08', title:'丹霞 → 回家', date:'9/28（一）–9/29（二）', route:'奎屯→S101丹霞→肯斯瓦特→烏魯木齊→回程', carTime:'約4小時',
   highlights:`<div class="highlight-grid">
   <div class="highlight-card"><div class="hc-head">🎨 S101百里丹霞</div><p>「天山地理畫廊」，紅橙黃綠灰紫像打翻調色盤</p></div>
   <div class="highlight-card"><div class="hc-head">💧 肯斯瓦特水庫</div><p>碧綠湖水鑲嵌在彩色丹霞中</p></div>
