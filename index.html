@@ -1,54 +1,381 @@
-// ---------- mascot (small corner decoration, reused across content pages) ----------
-const MASCOT_CAMEL = `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-<ellipse cx="50" cy="80" rx="34" ry="8" fill="#2E2418" opacity="0.08"/>
-<path d="M20 78 Q18 55 30 50 Q28 40 36 35 Q34 28 42 26 Q44 18 52 20 Q58 14 64 20 Q70 18 70 26 Q76 30 72 38 Q80 44 76 54 Q84 60 78 70 L76 78 Z" fill="#E8A23D"/>
-<circle cx="66" cy="30" r="3.2" fill="#2E2418"/>
-<path d="M28 78 L26 90 M34 78 L33 90 M64 78 L63 90 M70 78 L72 90" stroke="#C97F1F" stroke-width="5" stroke-linecap="round"/>
-</svg>`;
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>北疆金秋大冒險｜旅遊手冊</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4EFE1;
+  --card:#FFFDF6;
+  --ink:#221F19;
+  --pink:#F1CFD6;
+  --pink-deep:#DD8FA3;
+  --green:#8CAA8A;
+  --green-deep:#587C5C;
+  --mustard:#EFBE4A;
+  --mustard-deep:#C99A2E;
+  --terracotta:#E17F5A;
+  --terracotta-deep:#C25D3B;
+  --purple:#B7A6D9;
+  --sky:#8FBFCF;
+  --sky-deep:#4C8FA3;
+  --line:#221F19;
+}
+*{box-sizing:border-box;}
+html,body{height:100%;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Noto Sans TC', sans-serif;
+  overflow:hidden;
+}
+.app{ display:flex; height:100vh; width:100vw; }
 
-// ---------- helper: one flat-illustration person ----------
-function person(x, bodyColor, hairColor, hairStyle, armUp, skin){
-  skin = skin || '#F2C29A';
-  const armR = armUp ? `M${x+34} 150 Q${x+50} 118 ${x+40} 100` : `M${x+34} 150 Q${x+42} 168 ${x+34} 182`;
-  let hair = '';
-  if(hairStyle === 'twin'){ // twin ponytails (daughter)
-    hair = `<circle cx="${x-4}" cy="70" r="9" fill="${hairColor}"/><circle cx="${x+34}" cy="70" r="9" fill="${hairColor}"/><path d="M${x-2} 48 Q${x+15} 30 ${x+32} 48 Q${x+34} 66 ${x+15} 68 Q${x-4} 66 ${x-2} 48Z" fill="${hairColor}"/>`;
-  } else if(hairStyle === 'pony'){ // single ponytail (daughter)
-    hair = `<path d="M${x+30} 55 Q${x+48} 60 ${x+42} 85" stroke="${hairColor}" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M${x-2} 48 Q${x+15} 28 ${x+32} 48 Q${x+34} 66 ${x+15} 68 Q${x-4} 66 ${x-2} 48Z" fill="${hairColor}"/>`;
-  } else if(hairStyle === 'bob'){ // mom bob
-    hair = `<path d="M${x-4} 50 Q${x+15} 26 ${x+34} 50 Q${x+36} 74 ${x+15} 72 Q${x-6} 74 ${x-4} 50Z" fill="${hairColor}"/>`;
-  } else if(hairStyle === 'bun'){ // mom bun
-    hair = `<circle cx="${x+15}" cy="34" r="8" fill="${hairColor}"/><path d="M${x-3} 50 Q${x+15} 30 ${x+33} 50 Q${x+34} 66 ${x+15} 66 Q${x-4} 66 ${x-3} 50Z" fill="${hairColor}"/>`;
-  } else if(hairStyle === 'short'){ // dad short hair
-    hair = `<path d="M${x-4} 48 Q${x+15} 28 ${x+34} 48 Q${x+33} 56 ${x+15} 56 Q${x-3} 56 ${x-4} 48Z" fill="${hairColor}"/>`;
-  } else if(hairStyle === 'cap'){ // dad cap
-    hair = `<path d="M${x-6} 50 Q${x+15} 26 ${x+36} 50 L${x+40} 54 Q${x+15} 44 ${x-10} 54 Z" fill="${hairColor}"/>`;
+/* ============ SIDEBAR ============ */
+.sidebar{ width:236px; min-width:236px; background:#FFFCF3; border-right:2px solid var(--line); padding:22px 0; overflow-y:auto; position:relative; z-index:5; }
+.sidebar::-webkit-scrollbar{width:6px;}
+.sidebar::-webkit-scrollbar-thumb{background:var(--pink-deep);border-radius:3px;}
+.sidebar-brand{ font-family:'Baloo 2', sans-serif; font-weight:800; font-size:21px; padding:0 20px 16px 20px; color:var(--ink); letter-spacing:0.5px; border-bottom:2px dashed var(--line); margin-bottom:10px; }
+.sidebar-brand span{display:block;font-family:'Noto Sans TC';font-size:10.5px;color:var(--pink-deep);font-weight:700;margin-top:4px;letter-spacing:2px;}
+.chapter-label{ font-size:11px; letter-spacing:2px; color:var(--green-deep); padding:14px 20px 6px 20px; font-weight:800; }
+.nav-item{ display:flex; align-items:center; gap:10px; margin:2px 10px; padding:7px 12px; font-size:13px; cursor:pointer; color:#5c5648; transition:all .15s; border-radius:12px; border:2px solid transparent; line-height:1.4; }
+.nav-item:hover{background:var(--pink); border-color:var(--line); color:var(--ink);}
+.nav-item.active{ background:var(--green); border-color:var(--line); color:#fff; font-weight:800; }
+.nav-item .num{ font-family:'Baloo 2', sans-serif; font-size:12px; width:18px; min-width:18px; font-weight:800; opacity:0.7; }
+
+/* ============ STAGE ============ */
+.stage{ flex:1; position:relative; display:flex; align-items:center; justify-content:center; padding:34px 40px; }
+.book{ position:relative; width:100%; max-width:960px; height:100%; max-height:820px; }
+.page-card{ position:absolute; inset:0; background:var(--card); border-radius:26px; border:2.5px solid var(--line); box-shadow:8px 8px 0 rgba(34,31,25,0.12); overflow:hidden; opacity:0; transform:translateX(40px) scale(0.98); pointer-events:none; transition:opacity .35s ease, transform .35s ease; }
+.page-card.active{ opacity:1; transform:translateX(0) scale(1); pointer-events:auto; }
+.page-card.prev{ transform:translateX(-40px) scale(0.98); }
+
+.page-scroll{ position:absolute; inset:0; overflow-y:auto; padding:34px 44px 90px 44px; }
+.page-scroll::-webkit-scrollbar{width:8px;}
+.page-scroll::-webkit-scrollbar-thumb{background:var(--pink);border-radius:4px;}
+
+.page-topbar{ display:flex; justify-content:space-between; align-items:center; font-family:'Baloo 2', sans-serif; font-size:11.5px; color:var(--pink-deep); letter-spacing:1px; margin-bottom:8px; font-weight:700; }
+.page-topbar .chip{ background:var(--pink); border:1.5px solid var(--line); padding:3px 12px; border-radius:20px; font-weight:800; color:var(--ink); }
+
+h1.page-title{ font-family:'Baloo 2', sans-serif; font-weight:800; font-size:36px; color:var(--ink); margin:2px 0 2px 0; line-height:1.2; }
+h1.page-title small{ display:block; font-family:'Noto Sans TC'; font-size:12.5px; font-weight:700; color:var(--sky-deep); margin-top:7px; letter-spacing:0.5px; }
+.squiggle{width:64px; height:10px; margin:6px 0 4px 0; display:block;}
+h2.section-title{ font-family:'Baloo 2', sans-serif; font-weight:800; font-size:20px; color:var(--terracotta-deep); margin:24px 0 10px 0; display:flex; align-items:center; gap:8px; }
+h3.sub-title{ font-size:14px; font-weight:800; color:var(--sky-deep); margin:14px 0 6px 0; text-transform:uppercase; letter-spacing:0.5px; }
+p{line-height:1.85; font-size:13.5px; margin:7px 0; color:#413c31;}
+.lead{font-size:15.5px; color:var(--ink); font-weight:500;}
+
+table{ width:100%; border-collapse:collapse; margin:10px 0 18px 0; font-size:13px; background:#fff; border-radius:14px; overflow:hidden; border:2px solid var(--line); }
+th{ background:var(--green); color:#fff; padding:9px 12px; text-align:left; font-weight:800; font-size:12px; }
+td{ padding:8px 12px; border-bottom:1.5px solid #EFE8D5; vertical-align:top; }
+tr:last-child td{border-bottom:none;}
+tr:nth-child(even) td{background:#FBF6E9;}
+
+.callout{ background:var(--pink); border:2px solid var(--line); border-radius:16px; padding:12px 16px; margin:14px 0; font-size:13.5px; }
+.callout.blue{background:#E4F1F4; }
+.callout.green{background:#EAF1E7;}
+
+.egg-task{ margin-top:20px; background:#FFF3D6; border:2.5px dashed var(--terracotta-deep); border-radius:18px; padding:14px 18px; font-size:13.5px; }
+.egg-task .egg-label{ font-family:'Baloo 2', sans-serif; font-weight:800; color:var(--terracotta-deep); font-size:14.5px; margin-bottom:4px; display:flex; align-items:center; gap:6px; }
+
+.tag-row{display:flex; flex-wrap:wrap; gap:8px; margin:10px 0;}
+.tag{ background:#fff; border:2px solid var(--line); color:var(--ink); padding:4px 13px; border-radius:20px; font-size:12px; font-weight:800; }
+.stars{color:var(--mustard); letter-spacing:1px;}
+
+.two-col{display:grid; grid-template-columns:1fr 1fr; gap:0 26px;}
+@media (max-width:760px){.two-col{grid-template-columns:1fr;}}
+
+/* ============ pill button ============ */
+.pill-btn{ display:inline-flex; align-items:center; justify-content:center; background:var(--green); color:#fff; border:2px solid var(--line); border-radius:999px; padding:6px 16px; font-weight:800; font-size:12.5px; cursor:pointer; box-shadow:2px 2px 0 var(--line); transition:transform .1s; }
+.pill-btn:hover{transform:translate(-1px,-1px); box-shadow:3px 3px 0 var(--line);}
+
+/* ============ highlight cards (colorful photo-tile style) ============ */
+.highlight-grid{ display:grid; grid-template-columns:1fr 1fr; gap:13px; margin:12px 0 8px 0; }
+@media (max-width:760px){.highlight-grid{grid-template-columns:1fr;}}
+.highlight-card{ background:#fff; border:2px solid var(--line); border-radius:16px; padding:0; overflow:hidden; }
+.highlight-card.wide{grid-column:1/-1;}
+.highlight-card .hc-head{ display:flex; align-items:center; gap:8px; font-weight:800; color:#fff; font-size:14.5px; padding:11px 14px; }
+.highlight-card .hc-icon{ font-size:21px; }
+.highlight-card p{margin:0; font-size:12.5px; line-height:1.7; padding:10px 14px 13px 14px;}
+.highlight-grid .highlight-card:nth-child(6n+1) .hc-head{background:var(--terracotta);}
+.highlight-grid .highlight-card:nth-child(6n+2) .hc-head{background:var(--green-deep);}
+.highlight-grid .highlight-card:nth-child(6n+3) .hc-head{background:var(--sky-deep);}
+.highlight-grid .highlight-card:nth-child(6n+4) .hc-head{background:var(--pink-deep);}
+.highlight-grid .highlight-card:nth-child(6n+5) .hc-head{background:var(--mustard-deep);}
+.highlight-grid .highlight-card:nth-child(6n+6) .hc-head{background:var(--purple);}
+
+/* ============ day banner (big number, rotating colors) ============ */
+.day-banner{ position:relative; border:2.5px solid var(--line); border-radius:22px; padding:18px 22px; margin-bottom:16px; overflow:hidden; color:#fff; }
+.day-banner .db-num{ font-family:'Baloo 2'; font-weight:800; font-size:76px; position:absolute; right:10px; top:-14px; opacity:0.28; line-height:1; color:#fff; }
+.day-banner .db-tag{font-family:'Baloo 2'; font-size:11px; letter-spacing:3px; font-weight:700; opacity:0.9;}
+.day-banner h1{font-family:'Baloo 2'; font-weight:800; font-size:28px; margin:4px 0; color:#fff; position:relative; z-index:2;}
+.day-banner .db-meta{font-size:12.5px; display:flex; gap:8px; flex-wrap:wrap; margin-top:6px; position:relative; z-index:2;}
+.day-banner .db-meta span{background:rgba(255,255,255,0.24); padding:3px 12px; border-radius:12px; font-weight:700;}
+
+/* ============ section divider (decorative) ============ */
+.section-divider{ display:flex; align-items:center; justify-content:center; margin:16px 0; }
+.section-divider .sd-circle{ width:34px; height:34px; border-radius:50%; background:var(--mustard); border:2.5px solid var(--line); display:flex; align-items:center; justify-content:center; font-weight:900; font-size:15px; }
+
+/* ============ timeline ============ */
+.timeline{ margin:14px 0 20px 0; position:relative; padding-left:26px; }
+.timeline::before{ content:''; position:absolute; left:8px; top:6px; bottom:6px; width:2px; background:repeating-linear-gradient(to bottom, var(--terracotta) 0 6px, transparent 6px 12px); }
+.timeline-step{ position:relative; padding-bottom:16px; }
+.timeline-step:last-child{padding-bottom:0;}
+.timeline-step::before{ content:''; position:absolute; left:-26px; top:2px; width:15px; height:15px; border-radius:50%; background:var(--mustard); border:2.5px solid var(--line); }
+.timeline-step b{color:var(--terracotta-deep);}
+.timeline-step .ts-desc{font-size:12.5px; color:#6b6152;}
+
+/* ============ steps-row ============ */
+.steps-row{ display:flex; gap:10px; margin:14px 0; flex-wrap:wrap; align-items:stretch; }
+.step-card{ flex:1; min-width:150px; background:#EAF1E7; border:2px solid var(--line); border-radius:16px; padding:14px; text-align:center; }
+.step-card .step-num{ width:24px; height:24px; border-radius:50%; background:var(--green-deep); color:#fff; display:flex; align-items:center; justify-content:center; font-family:'Baloo 2'; font-weight:800; margin:0 auto 8px auto; font-size:12.5px; }
+.step-card p{margin:0; font-size:12.5px;}
+.step-arrow{ align-self:center; color:var(--terracotta); font-size:20px; font-weight:900; }
+@media (max-width:760px){.step-arrow{display:none;}}
+
+/* ============ flip cards (food & souvenirs) ============ */
+.flip-grid{ display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; margin:12px 0 20px 0; }
+@media (max-width:760px){.flip-grid{grid-template-columns:repeat(2,1fr);}}
+.flip-card{ perspective:800px; height:118px; cursor:pointer; }
+.flip-inner{ position:relative; width:100%; height:100%; transition:transform .5s; transform-style:preserve-3d; }
+.flip-card.flipped .flip-inner{ transform:rotateY(180deg); }
+.flip-front,.flip-back{ position:absolute; inset:0; border-radius:16px; border:2px solid var(--line); backface-visibility:hidden; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:8px; text-align:center; }
+.flip-front{ background:#FBF6E9; }
+.flip-front .fc-emoji{ font-size:30px; }
+.flip-front .fc-name{ font-weight:800; font-size:12.5px; margin-top:4px; }
+.flip-back{ background:var(--terracotta); color:#fff; transform:rotateY(180deg); font-size:11px; line-height:1.5; gap:4px; }
+.flip-back .fc-stars{color:var(--mustard); font-size:12px;}
+.souvenir-back{background:var(--sky-deep);}
+
+/* ============ flight card ============ */
+.flight-card{ background:#FBF6E9; border:2px solid var(--line); border-radius:16px; padding:14px 18px; margin:10px 0; }
+.flight-route{ display:flex; align-items:center; justify-content:space-between; font-weight:800; font-size:14.5px; color:var(--ink); flex-wrap:wrap; gap:6px;}
+.flight-route .fr-arrow{color:var(--terracotta); font-size:15px; margin:0 6px;}
+.flight-time{font-family:'Baloo 2'; color:var(--sky-deep); font-weight:700; font-size:13.5px;}
+.flight-meta{ display:flex; flex-wrap:wrap; gap:6px 8px; font-size:11.5px; color:#6b6152; margin-top:8px; }
+.flight-meta span{ background:#fff; border:1.5px solid var(--line); padding:3px 10px; border-radius:10px; }
+
+/* ============ day hero ============ */
+.day-hero{ background:var(--green); color:#fff; border:2.5px solid var(--line); border-radius:20px; padding:16px 20px; margin-bottom:16px; }
+.day-hero .dh-tag{ font-family:'Baloo 2'; font-size:11px; letter-spacing:2px; opacity:0.9; font-weight:700;}
+.day-hero h1{ font-family:'Baloo 2'; font-weight:800; font-size:24px; margin:4px 0; color:#fff; }
+.day-hero .dh-meta{ font-size:12.5px; opacity:0.95; display:flex; gap:10px; flex-wrap:wrap; margin-top:4px;}
+.day-hero .dh-meta span{background:rgba(255,255,255,0.2); padding:3px 12px; border-radius:12px; font-weight:700;}
+
+.day-info-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:12px 0; }
+@media (max-width:760px){.day-info-grid{grid-template-columns:1fr;}}
+.info-card{ border:2px solid var(--line); border-radius:16px; padding:14px 16px; }
+.info-card.food{ background:#FBEEE6; }
+.info-card.hotel{ background:#EAF1F4; }
+.info-card .ic-title{ font-weight:800; font-size:13.5px; margin-bottom:6px; display:flex; gap:6px; align-items:center;}
+.info-card.food .ic-title{color:var(--terracotta-deep);}
+.info-card.hotel .ic-title{color:var(--sky-deep);}
+.info-card p{margin:2px 0; font-size:12.5px;}
+
+/* ============ checklist ============ */
+.checklist{list-style:none; padding:0; margin:10px 0; display:grid; grid-template-columns:1fr 1fr; gap:6px 18px;}
+.checklist li{ font-size:13px; padding:6px 0 6px 26px; position:relative; border-bottom:1.5px dotted #E4DAC0; }
+.checklist li::before{ content:''; position:absolute; left:0; top:7px; width:15px; height:15px; border:2px solid var(--green-deep); border-radius:5px; }
+@media (max-width:760px){.checklist{grid-template-columns:1fr;}}
+
+/* ============ map ============ */
+.map-wrap{ background:#FBF6E9; border:2px solid var(--line); border-radius:18px; padding:12px; margin:12px 0; }
+.map-legend{ display:flex; flex-wrap:wrap; gap:8px 14px; margin-top:10px; font-size:11.5px; }
+.map-legend span{ display:inline-flex; align-items:center; gap:5px; font-weight:700; }
+.map-legend i{ width:14px; height:5px; border-radius:3px; display:inline-block; }
+
+/* ============ COVER (full-bleed landscape illustration) ============ */
+.cover-page{ position:relative; height:100%; overflow:hidden; background:#FBF1DE; }
+.cover-page .cover-illustration{ position:absolute; inset:0; width:100%; height:100%; }
+.cover-page .cover-illustration svg{ width:100%; height:100%; display:block; }
+.cover-overlay{ position:relative; z-index:3; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; padding:40px 30px 0 30px; text-align:center; pointer-events:none; }
+.cover-title-panel{ background:rgba(251,241,222,0.88); border:2.5px solid var(--line); border-radius:24px; padding:16px 30px; box-shadow:4px 4px 0 rgba(34,31,25,0.15); }
+.cover-title-panel .cover-sub{ font-family:'Baloo 2'; font-weight:700; font-size:12px; letter-spacing:4px; color:var(--green-deep); }
+.cover-title-panel h1{ font-family:'Baloo 2'; font-weight:800; font-size:44px; color:var(--ink); margin:6px 0 0 0; line-height:1.2; }
+.cover-dates{ margin-top:18px; background:var(--terracotta); color:#fff; font-weight:800; font-family:'Baloo 2'; padding:8px 24px; border:2.5px solid var(--line); border-radius:30px; font-size:14px; letter-spacing:1px; box-shadow:3px 3px 0 var(--line); pointer-events:auto; }
+
+/* ============ controls ============ */
+.controls{ position:absolute; bottom:18px; left:50%; transform:translateX(-50%); display:flex; align-items:center; gap:16px; background:#FFFCF3; border:2.5px solid var(--line); padding:9px 20px; border-radius:40px; z-index:10; box-shadow:4px 4px 0 rgba(34,31,25,0.15); }
+.ctrl-btn{ background:var(--terracotta); color:#fff; border:2px solid var(--line); width:36px; height:36px; border-radius:50%; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform .15s; font-weight:900; }
+.ctrl-btn:hover{transform:scale(1.08);}
+.ctrl-btn:disabled{opacity:0.3; cursor:default;}
+.ctrl-btn:disabled:hover{transform:none;}
+.page-counter{color:var(--ink); font-family:'Baloo 2'; font-weight:700; font-size:13.5px; min-width:56px; text-align:center;}
+.mobile-toggle{display:none;}
+
+@media (max-width:900px){
+  .sidebar{position:fixed; left:0; top:0; bottom:0; transform:translateX(-100%); transition:transform .25s; box-shadow:0 0 30px rgba(0,0,0,0.25); z-index:30;}
+  .sidebar.open{transform:translateX(0);}
+  .mobile-toggle{ display:flex; position:absolute; top:16px; left:16px; z-index:20; width:40px; height:40px; border-radius:50%; background:var(--terracotta); color:#fff; border:2px solid var(--line); align-items:center; justify-content:center; cursor:pointer; font-size:18px; }
+  .stage{padding:70px 12px 90px 12px;}
+  .page-scroll{padding:26px 18px 90px 18px;}
+  h1.page-title{font-size:23px;}
+  .cover-content h1{font-size:32px;}
+  .two-col{grid-template-columns:1fr;}
+  .flip-grid{grid-template-columns:repeat(2,1fr);}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="mobile-toggle" id="mobileToggle">☰</div>
+  <nav class="sidebar" id="sidebar"></nav>
+  <div class="stage">
+    <div class="book" id="book"></div>
+    <div class="controls">
+      <button class="ctrl-btn" id="prevBtn">‹</button>
+      <div class="page-counter" id="pageCounter">1 / 21</div>
+      <button class="ctrl-btn" id="nextBtn">›</button>
+    </div>
+  </div>
+</div>
+<script>
+// ---------- helper: scattered dot texture (deterministic, no Math.random) ----------
+function dotField(cx, cy, w, h, n, color, rMin, rMax){
+  let out = '';
+  for(let i=0;i<n;i++){
+    const fx = (Math.sin(i*12.9898+cx)*43758.5453) % 1;
+    const fy = (Math.sin(i*78.233+cy)*12543.123) % 1;
+    const px = cx + ((fx<0?-fx:fx)) * w;
+    const py = cy + ((fy<0?-fy:fy)) * h;
+    const r = rMin + (((Math.sin(i*3.7)+1)/2) * (rMax-rMin));
+    out += `<circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="${r.toFixed(1)}" fill="${color}"/>`;
   }
-  return `<g>
-    <ellipse cx="${x+15}" cy="196" rx="30" ry="7" fill="#2E2418" opacity="0.10"/>
-    <path d="${armR}" stroke="${skin}" stroke-width="11" stroke-linecap="round" fill="none"/>
-    <path d="M${x-4} 150 Q${x-16} 172 ${x-6} 190" stroke="${skin}" stroke-width="11" stroke-linecap="round" fill="none"/>
-    <path d="M${x-6} 98 Q${x-14} 130 ${x-2} 160 L${x+32} 160 Q${x+44} 130 ${x+36} 98 Q${x+15} 88 ${x-6} 98Z" fill="${bodyColor}"/>
-    <rect x="${x-2}" y="152" width="14" height="34" rx="6" fill="#3a3126"/>
-    <rect x="${x+18}" y="152" width="14" height="34" rx="6" fill="#3a3126"/>
-    <circle cx="${x+15}" cy="70" r="24" fill="${skin}"/>
-    ${hair}
-    <circle cx="${x+7}" cy="72" r="2.4" fill="#2E2418"/>
-    <circle cx="${x+23}" cy="72" r="2.4" fill="#2E2418"/>
-    <path d="M${x+8} 80 Q${x+15} 85 ${x+22} 80" stroke="#AC3F26" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-  </g>`;
+  return out;
 }
 
-const FAMILY_ILLUSTRATION = `
-<svg viewBox="0 0 800 230" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto; display:block;">
-  <ellipse cx="400" cy="215" rx="420" ry="30" fill="#3f5a3a" opacity="0.55"/>
-  ${person(60, '#D1573A', '#3a2a1e', 'short', false)}
-  ${person(140, '#E8A23D', '#5c3a22', 'bob', false)}
-  ${person(230, '#E8785A', '#2e2418', 'twin', true)}
-  ${person(430, '#3D7EA6', '#402d1f', 'pony', true)}
-  ${person(540, '#F0C34E', '#6b4226', 'bun', false)}
-  ${person(620, '#5C8253', '#2e2418', 'cap', false)}
+// ---------- full-bleed autumn landscape illustration for the cover (no people) ----------
+const LANDSCAPE_ILLUSTRATION = `
+<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+  <rect width="800" height="500" fill="#FDF3D9"/>
+  <circle cx="120" cy="95" r="58" fill="#E9E36B" opacity="0.9"/>
+  <circle cx="120" cy="95" r="58" fill="none" stroke="#221F19" stroke-width="2" opacity="0.15"/>
+
+  <!-- back mountain ridge -->
+  <path d="M0 190 L90 110 L150 160 L230 80 L300 150 L380 95 L470 165 L560 100 L650 160 L730 120 L800 175 L800 260 L0 260 Z" fill="#BFE0DA"/>
+  <path d="M150 160 L230 80 L300 150" fill="#FFFFFF" opacity="0.85"/>
+  <path d="M380 95 L470 165" stroke="#FFFFFF" stroke-width="14" opacity="0.7"/>
+  <path d="M560 100 L650 160" stroke="#FFFFFF" stroke-width="10" opacity="0.6"/>
+
+  <!-- mid mountain ridge (teal) -->
+  <path d="M0 240 L100 175 L190 225 L280 155 L370 220 L460 165 L560 230 L660 175 L800 235 L800 320 L0 320 Z" fill="#5FA9A0"/>
+  <path d="M190 225 L280 155 L370 220" fill="#E9F4EC" opacity="0.55"/>
+
+  <!-- pink blossom hillside accent -->
+  <path d="M560 230 L660 175 L740 220 L800 200 L800 320 L560 320 Z" fill="#EFC9DA" opacity="0.7"/>
+  ${dotField(600, 240, 190, 70, 40, '#DD8FA3', 3, 6)}
+
+  <!-- rolling meadow hills -->
+  <path d="M0 300 Q120 250 240 300 T480 300 T800 300 L800 500 L0 500 Z" fill="#C9D96B"/>
+  ${dotField(30, 320, 350, 130, 70, '#EFBE4A', 2.5, 5)}
+  ${dotField(420, 320, 380, 130, 70, '#8CAA8A', 2.5, 5)}
+
+  <path d="M0 360 Q150 320 300 365 T600 360 T800 375 L800 500 L0 500 Z" fill="#9CC169"/>
+  ${dotField(60, 380, 340, 100, 55, '#FDF3D9', 2, 4)}
+  ${dotField(460, 385, 320, 100, 55, '#EFBE4A', 2, 4)}
+
+  <!-- winding road -->
+  <path d="M-20 470 C 120 430, 140 380, 260 360 S 420 300, 520 290 S 700 250, 830 230" fill="none" stroke="#F4EFE1" stroke-width="26" stroke-linecap="round"/>
+  <path d="M-20 470 C 120 430, 140 380, 260 360 S 420 300, 520 290 S 700 250, 830 230" fill="none" stroke="#221F19" stroke-width="26" stroke-linecap="round" opacity="0.12"/>
+  <path d="M-20 470 C 120 430, 140 380, 260 360 S 420 300, 520 290 S 700 250, 830 230" fill="none" stroke="#EFBE4A" stroke-width="3" stroke-dasharray="10 10" opacity="0.7"/>
+
+  <!-- little travel van on the road -->
+  <g transform="translate(330,335) rotate(-14)">
+    <rect x="0" y="0" width="58" height="26" rx="8" fill="#E17F5A" stroke="#221F19" stroke-width="2.5"/>
+    <rect x="38" y="-14" width="24" height="20" rx="6" fill="#E17F5A" stroke="#221F19" stroke-width="2.5"/>
+    <rect x="42" y="-9" width="14" height="10" rx="2" fill="#BFE0DA"/>
+    <circle cx="14" cy="27" r="7" fill="#221F19"/>
+    <circle cx="46" cy="27" r="7" fill="#221F19"/>
+    <circle cx="14" cy="27" r="3" fill="#F4EFE1"/>
+    <circle cx="46" cy="27" r="3" fill="#F4EFE1"/>
+  </g>
+
+  <!-- larch / conifer clusters -->
+  <g>
+    <path d="M120 420 L134 380 L148 420 Z" fill="#8CAA8A" stroke="#221F19" stroke-width="2"/>
+    <path d="M132 400 L146 365 L160 400 Z" fill="#7C9C79" stroke="#221F19" stroke-width="2"/>
+    <path d="M600 400 L616 355 L632 400 Z" fill="#8CAA8A" stroke="#221F19" stroke-width="2"/>
+    <path d="M660 415 L674 378 L688 415 Z" fill="#7C9C79" stroke="#221F19" stroke-width="2"/>
+  </g>
+
+  <!-- foreground flower bed -->
+  <rect x="0" y="440" width="800" height="60" fill="#B7CB5E"/>
+  ${dotField(20, 445, 760, 45, 90, '#8CAA8A', 2, 4)}
+
+  <g>
+    <!-- big pink flower -->
+    <g transform="translate(90,468)">
+      <circle cx="0" cy="-14" r="12" fill="#EFC9DA" stroke="#221F19" stroke-width="2"/>
+      <circle cx="13" cy="-4" r="12" fill="#EFC9DA" stroke="#221F19" stroke-width="2"/>
+      <circle cx="8" cy="12" r="12" fill="#EFC9DA" stroke="#221F19" stroke-width="2"/>
+      <circle cx="-8" cy="12" r="12" fill="#EFC9DA" stroke="#221F19" stroke-width="2"/>
+      <circle cx="-13" cy="-4" r="12" fill="#EFC9DA" stroke="#221F19" stroke-width="2"/>
+      <circle cx="0" cy="0" r="10" fill="#EFBE4A" stroke="#221F19" stroke-width="2"/>
+    </g>
+    <!-- big yellow flower -->
+    <g transform="translate(700,478)">
+      <circle cx="0" cy="-13" r="11" fill="#F6E27A" stroke="#221F19" stroke-width="2"/>
+      <circle cx="12" cy="-4" r="11" fill="#F6E27A" stroke="#221F19" stroke-width="2"/>
+      <circle cx="7" cy="11" r="11" fill="#F6E27A" stroke="#221F19" stroke-width="2"/>
+      <circle cx="-7" cy="11" r="11" fill="#F6E27A" stroke="#221F19" stroke-width="2"/>
+      <circle cx="-12" cy="-4" r="11" fill="#F6E27A" stroke="#221F19" stroke-width="2"/>
+      <circle cx="0" cy="0" r="9" fill="#E17F5A" stroke="#221F19" stroke-width="2"/>
+    </g>
+    <g transform="translate(230,485) scale(0.75)">
+      <circle cx="0" cy="-13" r="11" fill="#F1CFD6" stroke="#221F19" stroke-width="2"/>
+      <circle cx="12" cy="-4" r="11" fill="#F1CFD6" stroke="#221F19" stroke-width="2"/>
+      <circle cx="7" cy="11" r="11" fill="#F1CFD6" stroke="#221F19" stroke-width="2"/>
+      <circle cx="-7" cy="11" r="11" fill="#F1CFD6" stroke="#221F19" stroke-width="2"/>
+      <circle cx="-12" cy="-4" r="11" fill="#F1CFD6" stroke="#221F19" stroke-width="2"/>
+      <circle cx="0" cy="0" r="9" fill="#EFBE4A" stroke="#221F19" stroke-width="2"/>
+    </g>
+  </g>
 </svg>`;
+
+const STAR_SVG = `<svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 1 L14.5 8.5 L22 9.5 L16.5 14.7 L18 22 L12 18.3 L6 22 L7.5 14.7 L2 9.5 L9.5 8.5 Z" fill="#EFBE4A" stroke="#221F19" stroke-width="1.2"/></svg>`;
+const SQUIGGLE_SVG = `<svg class="squiggle" viewBox="0 0 64 10" xmlns="http://www.w3.org/2000/svg"><path d="M1 6 Q8 1 16 6 T32 6 T48 6 T63 6" stroke="#EFBE4A" stroke-width="3" fill="none" stroke-linecap="round"/></svg>`;
+
+// ---------- schematic route map (each day segment a different color) ----------
+const ROUTE_MAP_SVG = `
+<svg viewBox="0 0 620 420" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto;">
+  <ellipse cx="310" cy="210" rx="290" ry="190" fill="#EAF1E7"/>
+  <path d="M60 80 Q120 40 200 60" stroke="#D8CBA8" stroke-width="14" fill="none" stroke-linecap="round" opacity="0.6"/>
+  <path d="M420 60 Q480 90 500 150" stroke="#D8CBA8" stroke-width="14" fill="none" stroke-linecap="round" opacity="0.6"/>
+  <!-- day2: Urumqi -> Altay (terracotta) -->
+  <path d="M460 360 Q320 260 170 160" stroke="#E17F5A" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <!-- day3-4: Altay -> Baihaba via Ahe road (green) -->
+  <path d="M170 160 Q120 100 70 65" stroke="#8CAA8A" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <!-- day5: Baihaba -> Kelamayi via Buerjin (pink) -->
+  <path d="M70 65 Q120 180 235 235" stroke="#DD8FA3" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <!-- day6: Kelamayi -> Sayram Lake (purple) -->
+  <path d="M235 235 Q290 270 335 300" stroke="#B7A6D9" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <!-- day7: Sayram -> Kuitun (mustard) -->
+  <path d="M335 300 Q365 320 385 335" stroke="#EFBE4A" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <!-- day8: Kuitun -> Urumqi (sky) -->
+  <path d="M385 335 Q430 350 460 360" stroke="#8FBFCF" stroke-width="6" fill="none" stroke-linecap="round"/>
+
+  <g font-family="Baloo 2" font-weight="700" font-size="12" fill="#221F19">
+    <circle cx="460" cy="360" r="9" fill="#fff" stroke="#221F19" stroke-width="2.5"/><text x="472" y="364">烏魯木齊</text>
+    <circle cx="170" cy="160" r="9" fill="#fff" stroke="#221F19" stroke-width="2.5"/><text x="182" y="164">阿勒泰</text>
+    <circle cx="70" cy="65" r="9" fill="#fff" stroke="#221F19" stroke-width="2.5"/><text x="18" y="50">白哈巴／喀納斯</text>
+    <circle cx="235" cy="235" r="9" fill="#fff" stroke="#221F19" stroke-width="2.5"/><text x="247" y="239">克拉瑪依</text>
+    <circle cx="335" cy="300" r="9" fill="#fff" stroke="#221F19" stroke-width="2.5"/><text x="347" y="304">賽里木湖</text>
+    <circle cx="385" cy="335" r="9" fill="#fff" stroke="#221F19" stroke-width="2.5"/><text x="325" y="352">奎屯</text>
+  </g>
+</svg>`;
+
+const MAP_LEGEND = [
+  {c:'#E17F5A', t:'Day2　烏魯木齊 → 阿勒泰'},
+  {c:'#8CAA8A', t:'Day3-4　阿勒泰 → 白哈巴（阿禾公路／喀納斯）'},
+  {c:'#DD8FA3', t:'Day5　白哈巴 → 克拉瑪依（經布爾津）'},
+  {c:'#B7A6D9', t:'Day6　克拉瑪依 → 賽里木湖'},
+  {c:'#EFBE4A', t:'Day7　賽里木湖 → 奎屯'},
+  {c:'#8FBFCF', t:'Day8　奎屯 → 烏魯木齊'},
+];
 
 // ---------- PAGE DATA ----------
 const PAGES = [];
@@ -56,160 +383,494 @@ const PAGES = [];
 /* ============ COVER ============ */
 PAGES.push({chapter:'封面', navLabel:'封面', num:'', isCover:true, html:`
 <div class="cover-page">
-  <div class="cover-block-sky"></div>
-  <div class="cover-block-gold"></div>
-  <div class="cover-block-terra"></div>
-  <div class="cover-dot" style="width:14px;height:14px;background:#fff;top:18%;right:12%;"></div>
-  <div class="cover-dot" style="width:8px;height:8px;background:#fff;top:30%;right:22%;"></div>
-  <div class="cover-dot" style="width:10px;height:10px;background:var(--sky);top:60%;left:8%;"></div>
-  <div class="cover-content">
-    <div class="cover-sub">N O R T H&nbsp; X I N J I A N G&nbsp; ·&nbsp; G O L D E N&nbsp; A U T U M N</div>
-    <h1>北疆金秋<br>大冒險</h1>
+  <div class="cover-illustration">${LANDSCAPE_ILLUSTRATION}</div>
+  <div class="cover-overlay">
+    <div class="cover-title-panel">
+      <div class="cover-sub">NORTH XINJIANG · GOLDEN AUTUMN</div>
+      <h1>北疆金秋大冒險</h1>
+    </div>
     <div class="cover-dates">2026.09.20 — 09.29</div>
   </div>
-  <div class="cover-illustration">${FAMILY_ILLUSTRATION}</div>
 </div>`});
 
 /* ============ PART 1：行前須知 ============ */
 
-PAGES.push({chapter:'行前須知', navLabel:'證件・航班・網路', num:1, html:`
-<h1 class="page-title">台灣人出發前必看！<small>證件、航班、網路、轉機</small></h1>
-<h2 class="section-title">📄 證件三寶（缺一不可）</h2>
-<table><tr><th>證件</th><th>檢查重點</th><th>誰負責</th></tr>
-<tr><td>台胞證</td><td>效期是否超過 2027/3/31？（入境後至少6個月）</td><td>所有人各自檢查</td></tr>
-<tr><td>護照</td><td>效期是否超過 2027/3/31？</td><td>所有人各自檢查</td></tr>
-<tr><td>身分證正本</td><td>辦邊防證要用！（白哈巴需要）白哈巴在中哈邊境，需要旅行社統一辦理的「邊防證」，出發前把身分證正本交給導遊，用完會歸還。</td><td>所有人帶</td></tr>
+PAGES.push({chapter:'行前須知', navLabel:'證件・網路', num:1, html:`
+<h1 class="page-title">證件與網路${SQUIGGLE_SVG}<small>出發前先確認好這兩件事</small></h1>
+<h2 class="section-title">📄 證件三寶</h2>
+<table><tr><th>證件</th><th>檢查重點</th></tr>
+<tr><td>台胞證</td><td>效期需超過 2027/3/31（入境後至少6個月）</td></tr>
+<tr><td>護照</td><td>效期需超過 2027/3/31</td></tr>
+<tr><td>身分證正本</td><td>辦邊防證用（白哈巴在中哈邊境，需要邊防證才能進入）。旅行社統一辦理，出發前把正本交給導遊，用完會歸還。</td></tr>
 </table>
 
 <h2 class="section-title">📱 網路與通訊</h2>
-<p>LINE、Facebook、Instagram 在新疆不能用（被擋了），需要 <b>VPN</b>，建議出發前先下載安裝並測試能用再出發。手機網路建議買 <b>eSIM（中港澳方案）</b>，或到烏魯木齊機場買中國移動預付卡（約100元人民幣/10GB）。跟家人報平安用 <b>微信</b>，台灣家人先下載註冊、加好友；導遊會建微信群組公告所有行程訊息。</p>
+<div class="highlight-grid">
+<div class="highlight-card"><div class="hc-head"><span class="hc-icon">🚫</span>VPN 必備</div><p>LINE、Facebook、Instagram 在新疆連不上，出發前先下載安裝 VPN 並測試可用。</p></div>
+<div class="highlight-card"><div class="hc-head"><span class="hc-icon">📶</span>手機上網</div><p>建議買 eSIM（中港澳方案），或到烏魯木齊機場買中國移動預付卡（約100元人民幣/10GB）。</p></div>
+<div class="highlight-card wide"><div class="hc-head"><span class="hc-icon">💬</span>跟家人報平安</div><p>用微信（WeChat），台灣家人請先下載、註冊、加好友。導遊會建立微信群組，所有行程訊息都會在裡面公告。</p></div>
+</div>
+`});
 
-<h2 class="section-title">✈️ 去程航班資訊</h2>
+PAGES.push({chapter:'行前須知', navLabel:'機票・行程總覽', num:2, html:`
+<h1 class="page-title">機票與行程總覽${SQUIGGLE_SVG}<small>去程航班、路線地圖、日出日落</small></h1>
+
+<h2 class="section-title">✈️ 去程航班</h2>
 <div class="flight-card">
   <div class="flight-route">桃園 T1 <span class="fr-arrow">✈</span> 香港 T1 <span class="flight-time">12:00 → 13:50</span></div>
-  <div class="flight-meta"><span>大灣區航空 HB703</span><span>機型 73A</span><span>飛行 1h50m</span><span>報到劃位</span><span>轉機 5 小時</span><span>手提 7KG</span><span>托運 20KG</span><span>行李直掛</span></div>
+  <div class="flight-meta"><span>大灣區航空 HB703</span><span>機型 73A</span><span>飛行 1h50m</span><span>轉機 5 小時</span><span>手提 7KG／托運 20KG</span><span>行李直掛</span></div>
 </div>
 <div class="flight-card">
   <div class="flight-route">香港 T2 <span class="fr-arrow">✈</span> 烏魯木齊 <span class="flight-time">19:35 → 01:15+1</span></div>
-  <div class="flight-meta"><span>大灣區航空 HB862</span><span>機型 7M9</span><span>飛行 5h40m</span><span>座位 27JKL、28JKL</span><span>手提 7KG</span><span>托運 20KG</span><span>行李直掛</span><span>機上不供餐，記得買點吃的</span></div>
+  <div class="flight-meta"><span>大灣區航空 HB862</span><span>機型 7M9</span><span>飛行 5h40m</span><span>座位 27JKL、28JKL</span><span>手提 7KG／托運 20KG</span><span>行李直掛</span><span>機上不供餐</span></div>
 </div>
-<div class="callout">轉機提醒：兩段航班行李可直掛到烏魯木齊，不用在香港領行李再托運。但機上餐都沒有，轉機時記得吃飽、也帶點乾糧上機！</div>
+<div class="callout">行李可直掛到烏魯木齊，香港轉機不用領行李。但兩段航班都沒有餐食，轉機時記得吃飽、帶點乾糧上機！</div>
+<div class="egg-task"><div class="egg-label">📌 彩蛋任務：轉機美食家</div>香港機場轉機5小時，找到「檀島咖啡」或「翠華餐廳」，買一個蛋撻＋凍檸茶組合，全員拍一張「偽香港旅遊照」！第一位分享到群組的人，獲得「轉機達人」稱號。</div>
 
-<div class="egg-task"><div class="egg-label">📌 彩蛋任務：轉機美食家</div>在香港機場5小時，找到「檀島咖啡」或「翠華餐廳」，買一個蛋撻＋凍檸茶組合，全員拍一張「偽香港旅遊照」！第一位在群組分享照片的人，獲得「轉機達人」稱號。</div>
-`});
+<h2 class="section-title">🗺️ 路線地圖</h2>
+<div class="map-wrap">
+  ${ROUTE_MAP_SVG}
+  <div class="map-legend">${MAP_LEGEND.map(m=>`<span><i style="background:${m.c}"></i>${m.t}</span>`).join('')}</div>
+</div>
 
-PAGES.push({chapter:'行前須知', navLabel:'行程總覽・路線圖', num:2, html:`
-<h1 class="page-title">行程總覽<small>9天路線一次看清楚，約2,500公里 ≈ 繞台灣3圈</small></h1>
-<table>
-<tr><th>日期</th><th>路線</th><th>住宿</th><th>轉機/車程</th></tr>
-<tr><td>9/20（日）</td><td>桃園機場 → 香港機場</td><td>—</td><td>香港轉機 5h</td></tr>
-<tr><td>9/21（一）</td><td>香港 → 烏魯木齊</td><td>烏魯木齊百麗酒店</td><td>1h</td></tr>
-<tr><td>9/22（二）</td><td>烏魯木齊→S21沙漠公路→克拉美麗→烏倫古湖→阿勒泰</td><td>阿勒泰尋雪‧拾光民宿</td><td>約7h</td></tr>
-<tr><td>9/23（三）</td><td>阿勒泰→阿禾公路→烏希里克→野卡峽→通巴森林→托勒海特</td><td>雍禾雅苑民宿</td><td>約5h</td></tr>
-<tr><td>9/24（四）</td><td>禾木→喀納斯湖→觀魚台→白哈巴</td><td>畫與·森民宿</td><td>—</td></tr>
-<tr><td>9/25（五）</td><td>白哈巴→喀納斯三灣→布爾津童話小鎮→克拉瑪依</td><td>克拉瑪依景徽大飯店</td><td>—</td></tr>
-<tr><td>9/26（六）</td><td>克拉瑪依→自駕環賽里木湖</td><td>山語湖度假飯店</td><td>約6h</td></tr>
-<tr><td>9/27（日）</td><td>賽里木湖日出→二進賽湖→奎屯</td><td>維也納國際飯店</td><td>約5h</td></tr>
-<tr><td>9/28（一）</td><td>奎屯→S101百里丹霞→肯斯瓦特→烏魯木齊機場</td><td>—</td><td>香港轉機 1h</td></tr>
-<tr><td>9/29（二）</td><td>香港 → 桃園機場</td><td>—</td><td>—</td></tr>
+<h2 class="section-title">☀️ 日出日落時間</h2>
+<table><tr><th>日期</th><th>地點</th><th>日出</th><th>日落</th><th>拍照黃金時段</th></tr>
+<tr><td>9/21</td><td>烏魯木齊</td><td>06:55</td><td>19:10</td><td>07:30-09:30、17:30-19:00</td></tr>
+<tr><td>9/22-23</td><td>阿勒泰</td><td>06:50</td><td>19:05</td><td>07:00-09:00、17:00-18:30</td></tr>
+<tr><td>9/24-25</td><td>喀納斯</td><td>06:45</td><td>19:00</td><td>07:00-09:00、16:30-18:30</td></tr>
+<tr><td>9/26-27</td><td>賽里木湖</td><td>06:50</td><td>19:05</td><td>07:00-09:00、17:00-18:30</td></tr>
 </table>
-
-<h2 class="section-title">🗺️ 路線圖</h2>
-<div class="timeline">
-  <div class="timeline-step"><b>桃園 → 香港 → 烏魯木齊</b><div class="ts-desc">飛機抵達新疆首府，夜逛和田二街</div></div>
-  <div class="timeline-step"><b>往北：S21沙漠公路 → 阿勒泰</b><div class="ts-desc">穿越古爾班通古特沙漠，進入金山之城</div></div>
-  <div class="timeline-step"><b>阿禾公路 → 禾木／喀納斯／白哈巴</b><div class="ts-desc">金秋落葉松公路，深入中國「西北第一村」</div></div>
-  <div class="timeline-step"><b>布爾津童話小鎮 → 克拉瑪依</b><div class="ts-desc">俄式彩色小鎮，接著進入石油之城</div></div>
-  <div class="timeline-step"><b>賽里木湖</b><div class="ts-desc">大西洋最後一滴眼淚，自駕環湖看日出</div></div>
-  <div class="timeline-step"><b>奎屯 S101百里丹霞 → 烏魯木齊 → 回家</b><div class="ts-desc">天山地理畫廊收尾，飛回香港轉桃園</div></div>
-</div>
 `});
 
-PAGES.push({chapter:'行前須知', navLabel:'新疆小教室①地理', num:3, html:`
-<h1 class="page-title">新疆小教室①<small>47倍大的土地</small></h1>
-<p class="lead">一句話認識新疆：<b>台灣的47倍大！</b>你們這次9天走的距離約2,500公里，等於繞台灣3圈，車上記得準備零食、頸枕、行動電源。</p>
+PAGES.push({chapter:'行前須知', navLabel:'新疆小教室・地理', num:3, html:`
+<h1 class="page-title">新疆小教室・地理${SQUIGGLE_SVG}<small>47倍大的土地</small></h1>
+<p class="lead">台灣的 <b>47倍大</b>！這次9天走約2,500公里，等於繞台灣3圈。</p>
 
-<h2 class="section-title">⛰️ 地形口訣：三山夾兩盆</h2>
+<h2 class="section-title">⛰️ 三山夾兩盆</h2>
 <div class="timeline">
   <div class="timeline-step"><b>阿爾泰山</b><div class="ts-desc">金色森林，你們會去！</div></div>
   <div class="timeline-step"><b>準噶爾盆地</b><div class="ts-desc">S21沙漠公路穿越於此</div></div>
-  <div class="timeline-step"><b>天山</b><div class="ts-desc">雪山媽媽，賽里木湖就在這裡</div></div>
-  <div class="timeline-step"><b>塔里木盆地・崑崙山</b><div class="ts-desc">太大、太遠，這次不去</div></div>
+  <div class="timeline-step"><b>天山</b><div class="ts-desc">賽里木湖就在這裡</div></div>
+  <div class="timeline-step"><b>塔里木盆地・崑崙山</b><div class="ts-desc">太遠，這次不去</div></div>
 </div>
 
 <h2 class="section-title">🏙️ 地名小知識</h2>
 <div class="highlight-grid">
-<div class="highlight-card"><div class="hc-head"><span class="hc-icon">🏞️</span>烏魯木齊</div><p>蒙古語「優美的牧場」，以前是草原，現在是新疆最大城市。</p></div>
-<div class="highlight-card"><div class="hc-head"><span class="hc-icon">⛏️</span>阿勒泰</div><p>蒙古語「金山」，山裡真的有黃金！路邊石頭可能是寶石。</p></div>
-<div class="highlight-card"><div class="hc-head"><span class="hc-icon">🌊</span>喀納斯</div><p>蒙古語「美麗而神秘的湖」，傳說有湖怪（其實是大魚）。</p></div>
-<div class="highlight-card"><div class="hc-head"><span class="hc-icon">🍀</span>賽里木</div><p>哈薩克語「祝福」，當地人說看到它會帶來好運。</p></div>
-<div class="highlight-card wide"><div class="hc-head"><span class="hc-icon">🛢️</span>克拉瑪依</div><p>維吾爾語「黑色的油」，地下全是石油！路邊「磕頭機」正在抽油。</p></div>
+<div class="highlight-card"><div class="hc-head"><span class="hc-icon">🏞️</span>烏魯木齊</div><p>蒙古語「優美的牧場」，新疆最大城市。</p></div>
+<div class="highlight-card"><div class="hc-head"><span class="hc-icon">⛏️</span>阿勒泰</div><p>蒙古語「金山」，山裡真的有黃金礦。</p></div>
+<div class="highlight-card"><div class="hc-head"><span class="hc-icon">🌊</span>喀納斯</div><p>蒙古語「美麗而神秘的湖」。</p></div>
+<div class="highlight-card"><div class="hc-head"><span class="hc-icon">🍀</span>賽里木</div><p>哈薩克語「祝福」。</p></div>
 </div>
-<div class="egg-task"><div class="egg-label">📌 彩蛋任務：地名收集王</div>拍下任何一個寫有以上地名的路牌、車站牌、門牌，集滿5個，回程飛機上獲得「新疆地名通」榮譽！</div>
+<div class="egg-task"><div class="egg-label">📌 彩蛋任務：地名收集王</div>拍下寫有以上地名的路牌、車站牌、門牌，集滿5個，獲得「新疆地名通」榮譽！</div>
 `});
 
-PAGES.push({chapter:'行前須知', navLabel:'新疆小教室②歷史', num:4, html:`
-<h1 class="page-title">新疆小教室②<small>3分鐘讀完新疆歷史</small></h1>
+PAGES.push({chapter:'行前須知', navLabel:'新疆小教室・歷史', num:4, html:`
+<h1 class="page-title">新疆小教室・歷史${SQUIGGLE_SVG}<small>3分鐘讀完新疆歷史</small></h1>
 <div class="highlight-grid">
-<div class="highlight-card wide"><div class="hc-head"><span class="hc-icon">🐫</span>古代篇：駱駝的星光大道</div><p>兩千年前，新疆是絲綢之路的中段。長安出發的駱駝隊扛著絲綢、茶葉、瓷器往西走，回程帶回葡萄、胡蘿蔔、琵琶、胡琴——原來這些都是「進口貨」！你們走的北疆，古代叫「草原絲綢之路」，騎馬走的，比南疆那條沙漠路舒服多了，至少不會滿嘴沙。</p></div>
-<div class="highlight-card wide"><div class="hc-head"><span class="hc-icon">🏛️</span>近代篇：兵團叔叔的熱血故事</div><p>1950年代，一群解放軍叔叔脫下軍裝、拿起鋤頭，在新疆開墾種田、修路蓋城，叫做「生產建設兵團」。你們走的 S21沙漠公路、S101國防公路，都是他們當年一鏟一鏟挖出來的！公路邊的防沙網格，也是兵團叔叔發明來固定沙丘的。向兵團叔叔致敬！👨‍🌾</p></div>
+<div class="highlight-card wide"><div class="hc-head"><span class="hc-icon">🐫</span>古代：草原絲路</div><p>兩千年前，新疆是絲綢之路的中段。北疆這條古代叫「草原絲綢之路」，騎馬走的，比南疆那條沙漠路舒服多了。</p></div>
+<div class="highlight-card wide"><div class="hc-head"><span class="hc-icon">🏛️</span>近代：兵團開路</div><p>1950年代「生產建設兵團」在新疆開墾修路，你們走的 S21沙漠公路、S101國防公路都是他們開出來的，公路邊的防沙網格也是他們發明的。</p></div>
 </div>
-<div class="callout">📜 一句話記住新疆歷史：<b>「漢朝設都護，清朝取名字，兵團開公路，現在我們來旅遊！」</b></div>
+<div class="callout">📜 一句話記住：<b>「漢朝設都護，清朝取名字，兵團開公路，現在我們來旅遊！」</b></div>
 `});
 
-PAGES.push({chapter:'行前須知', navLabel:'新疆小教室③人文', num:5, html:`
-<h1 class="page-title">新疆小教室③<small>北疆住著這些人</small></h1>
+PAGES.push({chapter:'行前須知', navLabel:'新疆小教室・人文', num:5, html:`
+<h1 class="page-title">新疆小教室・人文${SQUIGGLE_SVG}<small>北疆住著這些人</small></h1>
 <div class="highlight-grid">
-<div class="highlight-card"><div class="hc-head"><span class="hc-icon">🏙️</span>漢族——城市裡的鄰居</div><p>長相、穿著跟我們差不多，說普通話（帶點新疆腔，尾音上揚，聽起來很熱情）。多在烏魯木齊、克拉瑪依等大城市，導遊、司機多半是漢族。</p></div>
-<div class="highlight-card"><div class="hc-head"><span class="hc-icon">🎵</span>維吾爾族——巴扎裡的老闆</div><p>深邃五官、捲髮，男生戴花帽「多帕」、女生穿鮮豔花裙。夜市、餐廳、烤肉攤都遇得到，烤肉技術世界一流，熱情又會做生意。</p></div>
-<div class="highlight-card"><div class="hc-head"><span class="hc-icon">🐴</span>哈薩克族——馬背上的牧羊人</div><p>騎馬、馴鷹、住白色圓頂氈房（像蒙古包但更圓更高）。阿勒泰草原、喀納斯、禾木路邊常見，豪爽又愛騎馬。</p></div>
-<div class="highlight-card"><div class="hc-head"><span class="hc-icon">🏘️</span>圖瓦人——喀納斯的隱居者</div><p>全中國只有2,500人！住尖頂木屋、吹蘆葦笛、唱「呼麥」。你們會住進他們的村子——禾木、喀納斯、白哈巴，低調又神秘。</p></div>
+<div class="highlight-card"><div class="hc-head"><span class="hc-icon">🏙️</span>漢族</div><p>說普通話（帶新疆腔），多在烏魯木齊、克拉瑪依等大城市。</p></div>
+<div class="highlight-card"><div class="hc-head"><span class="hc-icon">🎵</span>維吾爾族</div><p>男戴花帽、女穿花裙，夜市烤肉攤常見，音樂與經商能力強。</p></div>
+<div class="highlight-card"><div class="hc-head"><span class="hc-icon">🐴</span>哈薩克族</div><p>騎馬馴鷹、住白色氈房，阿勒泰草原、喀納斯一帶常見。</p></div>
+<div class="highlight-card"><div class="hc-head"><span class="hc-icon">🏘️</span>圖瓦人</div><p>全中國僅2,500人，住尖頂木屋、唱呼麥，你們會住進他們的村子。</p></div>
 </div>
-<div class="egg-task"><div class="egg-label">📌 彩蛋任務：民族觀察家</div>拍下遇到的不同民族人士（記得先微笑徵求同意！），集滿4個民族的合照，獲得「北疆民族達人」稱號！</div>
+<div class="egg-task"><div class="egg-label">📌 彩蛋任務：民族觀察家</div>拍下遇到的不同民族人士（先微笑徵求同意！），集滿4個民族合照，獲得「北疆民族達人」稱號！</div>
 `});
+
+/* ============ 美食購物 with flip cards ============ */
+const FOODS = [
+  {n:'烤包子', e:'🥟', d:'方形酥皮，羊肉+洋蔥，外酥內噴汁', s:5},
+  {n:'手抓飯', e:'🍚', d:'黃蘿蔔+羊肉+米飯燜煮，甜甜的', s:5},
+  {n:'大盤雞', e:'🍗', d:'整盤雞肉+馬鈴薯+寬麵', s:5},
+  {n:'羊肉串', e:'🍢', d:'紅柳枝串大塊羊肉，孜然香噴噴', s:5},
+  {n:'饢餅', e:'🫓', d:'圓形大麵餅，芝麻香，放一週不壞', s:4},
+  {n:'額河烤魚', e:'🐟', d:'冷水魚，肉質緊實', s:4},
+  {n:'高白鮭', e:'🐠', d:'賽里木湖特產，肉嫩刺少', s:5},
+  {n:'椒麻雞', e:'🌶️', d:'雞絲涼拌花椒油，麻麻辣辣', s:4},
+  {n:'拌麵', e:'🍜', d:'手工拉麵+各種澆頭，麵條超Q', s:5},
+  {n:'酸奶', e:'🥛', d:'濃稠偏酸，加白砂糖吃', s:4},
+  {n:'格瓦斯', e:'🧃', d:'蜂蜜發酵飲料，像甜甜汽水', s:4},
+  {n:'奶疙瘩', e:'🧀', d:'硬硬乾奶酪，酸酸甜甜', s:3},
+];
+const SOUVENIRS = [
+  {n:'葡萄乾', e:'🍇', d:'推薦「香妃」品種，顆粒大、甜度高'},
+  {n:'紅棗', e:'🌰', d:'若羌紅棗，肉厚超甜'},
+  {n:'核桃', e:'🥜', d:'紙皮核桃，手一捏就破'},
+  {n:'高白鮭罐頭', e:'🥫', d:'賽里木湖特產，獨家伴手禮'},
+  {n:'羊絨圍巾', e:'🧣', d:'輕又暖，花色漂亮，大巴扎選擇多'},
+];
+function flipGrid(items, idPrefix, backClass){
+  return `<div class="flip-grid">${items.map((it,i)=>`
+    <div class="flip-card" data-id="${idPrefix}${i}">
+      <div class="flip-inner">
+        <div class="flip-front"><div class="fc-emoji">${it.e}</div><div class="fc-name">${it.n}</div></div>
+        <div class="flip-back ${backClass||''}">${it.d}${it.s?`<div class="fc-stars">${'★'.repeat(it.s)}${'☆'.repeat(5-it.s)}</div>`:''}</div>
+      </div>
+    </div>`).join('')}</div>`;
+}
 
 PAGES.push({chapter:'行前須知', navLabel:'美食購物攻略', num:6, html:`
-<h1 class="page-title">北疆美食吃透透<small>＋ 購物禮儀</small></h1>
-<h2 class="section-title">🍖 必吃美食清單</h2>
-<table><tr><th>美食</th><th>特色</th><th>哪裡吃</th><th>推薦</th></tr>
-<tr><td>烤包子</td><td>方形酥皮，羊肉+洋蔥，外酥內噴汁</td><td>和田二街、路邊饢坑</td><td class="stars">★★★★★</td></tr>
-<tr><td>手抓飯</td><td>黃蘿蔔+羊肉+米飯燜煮，甜甜的</td><td>到處都有</td><td class="stars">★★★★★</td></tr>
-<tr><td>大盤雞</td><td>整盤雞肉+馬鈴薯+寬麵</td><td>新疆餐廳</td><td class="stars">★★★★★</td></tr>
-<tr><td>羊肉串</td><td>紅柳枝串大塊羊肉，孜然香噴噴</td><td>夜市、路邊攤</td><td class="stars">★★★★★</td></tr>
-<tr><td>饢餅</td><td>圓形大麵餅，芝麻香，放一週不壞</td><td>路邊饢攤（3-5元）</td><td class="stars">★★★★</td></tr>
-<tr><td>額河烤魚</td><td>冷水魚（狗魚/五道黑），肉質緊實</td><td>布爾津夜市</td><td class="stars">★★★★</td></tr>
-<tr><td>高白鮭</td><td>賽里木湖特產，肉嫩刺少</td><td>賽里木湖餐廳</td><td class="stars">★★★★★</td></tr>
-<tr><td>椒麻雞</td><td>雞絲涼拌花椒油，麻麻辣辣</td><td>奎屯、烏魯木齊</td><td class="stars">★★★★</td></tr>
-<tr><td>拌麵</td><td>手工拉麵+各種澆頭</td><td>到處都有</td><td class="stars">★★★★★</td></tr>
-<tr><td>酸奶</td><td>濃稠偏酸，加白砂糖吃</td><td>餐廳、超市</td><td class="stars">★★★★</td></tr>
-<tr><td>格瓦斯</td><td>蜂蜜發酵飲料，像甜甜汽水</td><td>布爾津夜市</td><td class="stars">★★★★</td></tr>
-<tr><td>奶疙瘩</td><td>硬硬乾奶酪，酸酸甜甜</td><td>牧區小賣部</td><td class="stars">★★★</td></tr>
-</table>
+<h1 class="page-title">北疆美食吃透透${SQUIGGLE_SVG}<small>點一下卡片看特色與推薦程度</small></h1>
+<h2 class="section-title">🍖 必吃美食</h2>
+${flipGrid(FOODS, 'food')}
 
-<h2 class="section-title">⚠️ 清真餐廳3大守則</h2>
-<div class="callout red">不要提「豬肉」、不要帶豬肉製品（肉鬆、香腸留在飯店）、不要在清真餐廳喝酒。用右手拿食物、遞東西。</div>
+<h2 class="section-title">⚠️ 清真餐廳3守則</h2>
+<div class="callout">不要提「豬肉」、不要帶豬肉製品；不要在清真餐廳喝酒；用右手拿食物、遞東西。</div>
 
-<h2 class="section-title">🛍️ 購物殺價，三步驟搞定</h2>
+<h2 class="section-title">🛍️ 殺價三步驟</h2>
 <div class="steps-row">
-  <div class="step-card"><div class="step-num">1</div><p>老闆開價 100 元<br>你回：「50 賣不賣？」（面帶微笑）</p></div>
+  <div class="step-card"><div class="step-num">1</div><p>開價100 → 你回「50賣不賣？」</p></div>
   <div class="step-arrow">→</div>
-  <div class="step-card"><div class="step-num">2</div><p>老闆搖頭<br>你加一點：「60 啦，我買多一點」</p></div>
+  <div class="step-card"><div class="step-num">2</div><p>老闆搖頭 → 「60啦，我買多一點」</p></div>
   <div class="step-arrow">→</div>
-  <div class="step-card"><div class="step-num">3</div><p>老闆說「拿去吧拿去吧」<br>成交！約 70-80 元</p></div>
+  <div class="step-card"><div class="step-num">3</div><p>「拿去吧拿去吧」→ 成交！約70-80元</p></div>
 </div>
-<p><b>現金建議：</b>每人帶 2,000–3,000元人民幣（約台幣9,000–13,500元），景區、路邊攤只收現金。</p>
+<p>現金建議每人帶 2,000–3,000元人民幣，景區、路邊攤只收現金。</p>
 
-<h2 class="section-title">🎁 伴手禮買什麼？（點一下看介紹）</h2>
-<div class="souvenir-grid" id="souvenirGrid"></div>
-<div class="souvenir-detail" id="souvenirDetail">點選上方項目查看介紹 →</div>
+<h2 class="section-title">🎁 必買伴手禮</h2>
+${flipGrid(SOUVENIRS, 'souv', 'souvenir-back')}
 
-<div class="egg-task"><div class="egg-label">📌 彩蛋任務：美食獵人</div>拍下和田二街烤包子出爐瞬間 ＋ 喝格瓦斯後比喻像台灣什麼飲料 ＋ 統計誰吃羊肉串最多，冠軍獲得「羊肉串之王」！</div>
+<div class="egg-task"><div class="egg-label">📌 彩蛋任務：美食獵人</div>拍下烤包子出爐瞬間、喝格瓦斯比喻像台灣什麼飲料、統計誰吃羊肉串最多，冠軍獲得「羊肉串之王」！</div>
 `});
 
-const SOUVENIRS = [
-  {name:'葡萄乾', desc:'推薦「香妃」品種，顆粒特別大，甜度高又不死甜。大巴扎裡秤重賣，記得先試吃再買。'},
-  {name:'若羌紅棗', desc:'新疆若羌產的紅棗肉厚超甜，個頭比台灣常見的大很多，適合直接送禮或煮甜湯。'},
-  {name:'紙皮核桃', desc:'殼薄到用手一捏就破，核桃仁飽滿香脆，大巴扎裡常見秤重零售。'},
-  {name:'高白鮭罐頭', desc:'賽里木湖特產魚種做成的罐頭，是其他地方買不到的獨特伴手禮，遊客中心有賣。'},
-  {name:'羊絨圍巾', desc:'輕、暖、花色漂亮，大巴扎裡選擇很多，購買前可以摸摸看材質、順便練習殺價。'}
-];
+PAGES.push({chapter:'行前須知', navLabel:'天氣・穿搭', num:7, html:`
+<h1 class="page-title">天氣與穿搭${SQUIGGLE_SVG}<small>每天出門前看這頁！</small></h1>
+<h2 class="section-title">🌡️ 各地9月下旬氣溫</h2>
+<table><tr><th>地點</th><th>白天高溫</th><th>夜晚低溫</th><th>備註</th></tr>
+<tr><td>烏魯木齊</td><td>22°C</td><td>10°C</td><td>少雨</td></tr>
+<tr><td>阿勒泰</td><td>18°C</td><td>3°C</td><td>偶陣雨</td></tr>
+<tr><td>喀納斯/禾木</td><td>15°C</td><td>1°C</td><td>可能飄雪！</td></tr>
+<tr><td>賽里木湖</td><td>13°C</td><td>0°C</td><td>可能飄雪！</td></tr>
+</table>
+<div class="callout blue">早晚像冬天，中午像秋天，山區可能像北極 ❄️</div>
+
+<h2 class="section-title">👕 洋蔥式穿搭</h2>
+<div class="highlight-grid">
+<div class="highlight-card"><div class="hc-head"><span class="hc-icon">①</span>貼身層</div><p>發熱衣，吸汗保暖</p></div>
+<div class="highlight-card"><div class="hc-head"><span class="hc-icon">②</span>中層</div><p>羊毛衫／刷毛上衣，鎖住熱氣</p></div>
+<div class="highlight-card"><div class="hc-head"><span class="hc-icon">③</span>外層</div><p>防風防水衝鋒衣／輕羽絨，擋風擋雨</p></div>
+<div class="highlight-card"><div class="hc-head"><span class="hc-icon">④</span>配件</div><p>毛帽＋手套＋圍巾，保護頭手脖子</p></div>
+</div>
+<p>⚠️ 山區清晨可能零度以下，毛帽手套一定要帶！太陽眼鏡、護唇膏、保濕乳液必備（新疆超乾燥）。</p>
+<div class="egg-task"><div class="egg-label">📌 彩蛋任務：穿搭王</div>每天出門前投票選「最佳洋蔥穿搭」，得主負責幫大家買當日水果！</div>
+`});
+
+PAGES.push({chapter:'行前須知', navLabel:'旅遊必備清單', num:8, html:`
+<h1 class="page-title">旅遊必備清單${SQUIGGLE_SVG}<small>出發前打勾確認</small></h1>
+<h2 class="section-title">📂 證件財物</h2>
+<ul class="checklist"><li>台胞證（效期OK）</li><li>護照（效期OK）</li><li>身分證正本</li><li>人民幣現金</li><li>信用卡（備用）</li><li>證件影本（備用）</li></ul>
+<h2 class="section-title">👗 衣物鞋履</h2>
+<ul class="checklist"><li>發熱衣（2-3件）</li><li>羊毛衫/刷毛上衣</li><li>衝鋒衣/防風外套</li><li>輕羽絨外套</li><li>毛帽、手套、圍巾</li><li>太陽眼鏡</li><li>登山鞋、拖鞋</li><li>厚襪子（多雙）</li></ul>
+<h2 class="section-title">🧴 防曬保濕 ／ 💊 藥品</h2>
+<ul class="checklist"><li>防曬乳、護唇膏、乳液</li><li>面膜、護手霜</li><li>暈車藥、腸胃藥</li><li>感冒藥、止痛藥、個人慢性病藥</li></ul>
+<h2 class="section-title">📱 電子 ／ 🧻 日用</h2>
+<ul class="checklist"><li>手機（已裝VPN）、行動電源</li><li>充電線、多孔充電器</li><li>拋棄式馬桶墊、濕紙巾</li><li>保溫壺、零食、撲克牌</li></ul>
+<div class="egg-task"><div class="egg-label">📌 彩蛋任務：打包達人</div>回程統計誰帶最少卻最齊全、誰忘記最多，頒發「打包達人」與「遺忘之王」！</div>
+`});
+
+PAGES.push({chapter:'行前須知', navLabel:'拉車・廁所攻略', num:9, html:`
+<h1 class="page-title">長途拉車生存指南${SQUIGGLE_SVG}<small>＋ 廁所攻略</small></h1>
+<h2 class="section-title">🚗 每天坐車多久？</h2>
+<table><tr><th>日期</th><th>路線</th><th>車程</th></tr>
+<tr><td>9/22</td><td>烏魯木齊→阿勒泰</td><td>約7小時</td></tr>
+<tr><td>9/23</td><td>阿禾公路全段</td><td>約5小時</td></tr>
+<tr><td>9/26</td><td>克拉瑪依→賽里木湖</td><td>約6小時</td></tr>
+<tr><td>9/27</td><td>賽里木湖→奎屯</td><td>約5小時</td></tr>
+<tr><td>9/28</td><td>奎屯→烏魯木齊</td><td>約4小時</td></tr>
+</table>
+<div class="callout">車上必備5寶：頸枕＋毛毯＋零食＋行動電源＋耳機🎧</div>
+
+<h2 class="section-title">🚻 廁所攻略</h2>
+<table><tr><th>種類</th><th>衛生程度</th><th>注意</th></tr>
+<tr><td>飯店廁所</td><td class="stars">★★★★★</td><td>正常使用</td></tr>
+<tr><td>景區廁所</td><td class="stars">★★★</td><td>自備衛生紙</td></tr>
+<tr><td>路邊旱廁</td><td class="stars">★</td><td>深吸一口氣再進去！</td></tr>
+</table>
+<p>廁所生存包：衛生紙整包、拋棄式馬桶墊、濕紙巾／乾洗手、口罩。看到加油站、景區入口、餐廳飯前，把握機會先上！</p>
+<div class="egg-task"><div class="egg-label">📌 彩蛋任務：廁所評論家</div>每到一個廁所1-5星評分，統計「最雷廁所」和「最讚廁所」！</div>
+`});
+
+PAGES.push({chapter:'行前須知', navLabel:'拍照・安全須知', num:10, html:`
+<h1 class="page-title">拍照打卡指南${SQUIGGLE_SVG}<small>＋ 安全須知</small></h1>
+<h2 class="section-title">📸 哪裡拍最好看？</h2>
+<table><tr><th>景點</th><th>最佳拍攝點</th><th>最佳時間</th></tr>
+<tr><td>S21沙漠公路</td><td>公路中間（注意來車）</td><td>下午</td></tr>
+<tr><td>阿禾公路</td><td>任何一個彎道</td><td>全天</td></tr>
+<tr><td>禾木村</td><td>村後小山丘</td><td>清晨（晨霧）</td></tr>
+<tr><td>觀魚台</td><td>最頂端平台</td><td>中午</td></tr>
+<tr><td>月亮灣</td><td>觀景台</td><td>上午</td></tr>
+<tr><td>賽里木湖</td><td>點將台、木棧道</td><td>日出/黃昏</td></tr>
+<tr><td>S101丹霞</td><td>彩色山壁前</td><td>下午</td></tr>
+</table>
+
+<h2 class="section-title">⚠️ 安全提醒</h2>
+<div class="highlight-grid">
+<div class="highlight-card"><div class="hc-head">🛂 安檢站</div><p>搖窗、出示證件、配合檢查、不拍照</p></div>
+<div class="highlight-card"><div class="hc-head">🌧️ 天氣突變</div><p>聽導遊安排，安全第一</p></div>
+<div class="highlight-card"><div class="hc-head">🌙 夜間外出</div><p>結伴同行，不去偏僻處</p></div>
+<div class="highlight-card"><div class="hc-head">🐑 野生動物</div><p>不靠近、不餵食，保持距離</p></div>
+</div>
+<h2 class="section-title">📞 緊急電話</h2>
+<div class="tag-row"><span class="tag">公安 110</span><span class="tag">急救 120</span><span class="tag">消防 119</span><span class="tag">台灣急難救助 +886-800-085-095</span></div>
+`});
+
+/* ============ PART 2：每日行程 ============ */
+
+const DAY_COLORS = ['#E17F5A','#587C5C','#4C8FA3','#DD8FA3','#C99A2E','#B7A6D9'];
+let dayColorIdx = 0;
+
+function dayPage(opts){
+  const color = DAY_COLORS[dayColorIdx % DAY_COLORS.length];
+  dayColorIdx++;
+  return `
+<div class="day-banner" style="background:${color};">
+  <div class="db-num">${opts.dayNum}</div>
+  <div class="db-tag">${opts.date}</div>
+  <h1>${opts.title}</h1>
+  <div class="db-meta"><span>📍 ${opts.route}</span>${opts.carTime ? `<span>🚌 車程 ${opts.carTime}</span>` : ''}</div>
+</div>
+${opts.highlights}
+${opts.food || opts.hotel ? `<div class="section-divider"><div class="sd-circle">✈</div></div><div class="day-info-grid">
+  ${opts.food ? `<div class="info-card food"><div class="ic-title">🍜 吃什麼</div>${opts.food}</div>` : ''}
+  ${opts.hotel ? `<div class="info-card hotel"><div class="ic-title">🏨 住宿</div>${opts.hotel}</div>` : ''}
+</div>` : ''}
+${opts.knowledge ? `<div class="callout green">📚 小知識：${opts.knowledge}</div>` : ''}
+${opts.egg ? `<div class="egg-task"><div class="egg-label">📌 彩蛋任務：${opts.eggTitle}</div>${opts.egg}</div>` : ''}
+`;
+}
+
+PAGES.push({chapter:'每日行程', navLabel:'Day0-1 出發→烏魯木齊', num:11, html: dayPage({
+  dayNum:'00', title:'出發 → 烏魯木齊', date:'9/20（日）–9/21（一）', route:'桃園→香港→烏魯木齊',
+  highlights:`<div class="highlight-grid">
+  <div class="highlight-card wide"><div class="hc-head">✈️ 行程</div><p>9/20 桃園→香港（約2h），香港轉機5h。9/21 香港→烏魯木齊（約5h），下午抵達，入住飯店、逛和田二街夜市。</p></div>
+  <div class="highlight-card"><div class="hc-head">🌙 國際大巴扎</div><p>步行15分鐘，晚上燈光很美，逛乾果、工藝品</p></div>
+  <div class="highlight-card"><div class="hc-head">🌆 紅山公園</div><p>打車10分鐘，可俯瞰烏魯木齊夜景</p></div>
+  </div>`,
+  food:'<p>烤包子（3-5元/個）、手抓飯、大盤雞、羊肉串——和田二街走路3分鐘全部吃到</p>',
+  hotel:'<p><b>烏魯木齊百麗酒店</b>（和田二街經一路店）<br>風華靚麗雙床房｜戲院式書吧＋英倫風</p>',
+  knowledge:'烏魯木齊是蒙古語「優美的牧場」，清朝時叫「迪化」，1954年改名，現為新疆最大城市。',
+  eggTitle:'烤包子挑戰',
+  egg:'拍下老闆用長鐵鉗從饢坑夾出烤包子的瞬間，第一個分享到群組的人，隔天早餐飲料大家請客！'
+})});
+
+PAGES.push({chapter:'每日行程', navLabel:'Day2 沙漠公路→阿勒泰', num:12, html: dayPage({
+  dayNum:'02', title:'沙漠公路 → 阿勒泰', date:'9/22（二）', route:'烏魯木齊→S21→克拉美麗→烏倫古湖→阿勒泰', carTime:'約7小時',
+  highlights:`<div class="highlight-grid">
+  <div class="highlight-card"><div class="hc-head">🏜️ S21沙漠公路</div><p>穿越古爾班通古特沙漠，路邊防沙網格，下車拍照注意來車</p></div>
+  <div class="highlight-card"><div class="hc-head">🐫 克拉美麗沙漠公園</div><p>可自費騎駱駝或沙漠越野車，沙丘適合跳躍照</p></div>
+  <div class="highlight-card wide"><div class="hc-head">💧 烏倫古湖</div><p>新疆第二大湖（日月潭的79倍大！），湖邊雅丹地貌，人稱「海上魔鬼城」</p></div>
+  </div>`,
+  food:'<p>午餐服務區簡餐；晚餐阿勒泰市區—額河烤魚（肉質緊實）</p>',
+  hotel:'<p><b>阿勒泰尋雪‧拾光民宿</b><br>觀景雙人房，晚上可逛五百里風情街</p>',
+  knowledge:'阿勒泰是蒙古語「金山」，阿爾泰山真的有金礦，冬天是滑雪勝地。',
+  eggTitle:'沙漠跳跳虎',
+  egg:'沙漠公園全員跳躍拍照！誰跳最高最誇張，獲得「沙漠跳跳虎」稱號！'
+})});
+
+PAGES.push({chapter:'每日行程', navLabel:'Day3 阿禾公路', num:13, html: dayPage({
+  dayNum:'03', title:'阿禾公路 → 托勒海特', date:'9/23（三）', route:'阿勒泰→阿禾公路→烏希里克→野卡峽→通巴森林→托勒海特', carTime:'約5小時',
+  highlights:`<div class="highlight-grid">
+  <div class="highlight-card"><div class="hc-head">🌲 阿禾公路</div><p>2023年通車的網紅公路，9月底金黃落葉松滿山，隨便一個彎道都像明信片</p></div>
+  <div class="highlight-card"><div class="hc-head">🐃 烏希里克</div><p>濕地草原，可能有氂牛出沒</p></div>
+  <div class="highlight-card"><div class="hc-head">💎 野卡峽</div><p>冰川融水峽谷，藍綠色超清澈</p></div>
+  <div class="highlight-card"><div class="hc-head">🏔️ 托勒海特大草原</div><p>哈薩克族夏牧場，一望無際</p></div>
+  </div>`,
+  food:'<p>午餐路餐便當＋熱奶茶；晚餐民宿土火鍋（羊肉鮮甜）</p>',
+  hotel:'<p><b>雍禾雅苑民宿</b><br>疏影‧溫馨雙床房（暖氣＋智慧馬桶），旁邊小賣部賣奶疙瘩</p>',
+  knowledge:'阿爾泰山是中國唯一的西伯利亞泰加林分布區，是雪豹的家，秋天落葉松金黃勝過加拿大楓葉。',
+  eggTitle:'秋色收集',
+  egg:'撿一片最金黃的落葉夾進手冊，寫上地點，比比誰的葉子最美！'
+})});
+
+PAGES.push({chapter:'每日行程', navLabel:'Day4 喀納斯→白哈巴', num:14, html: dayPage({
+  dayNum:'04', title:'喀納斯 → 白哈巴', date:'9/24（四）', route:'禾木→喀納斯湖→觀魚台→白哈巴',
+  highlights:`<div class="highlight-grid">
+  <div class="highlight-card"><div class="hc-head">🏘️ 禾木村</div><p>圖瓦人木屋聚落，晨霧中最美</p></div>
+  <div class="highlight-card"><div class="hc-head">🌊 喀納斯湖</div><p>湖面翠綠帶藍，傳說湖怪其實是哲羅鮭</p></div>
+  <div class="highlight-card"><div class="hc-head">🪜 觀魚台</div><p>爬1,068級階梯，攻頂俯瞰全湖，超值得！</p></div>
+  <div class="highlight-card"><div class="hc-head">🇨🇳 白哈巴</div><p>中國「西北第一村」，與哈薩克僅隔一河，夜晚滿天銀河</p></div>
+  </div>`,
+  food:'<p>午餐圖瓦人自製酸奶；晚餐白哈巴民宿手抓肉</p>',
+  hotel:'<p><b>畫與·森民宿</b>（白哈巴景區內）<br>硯籬·雙床房（智慧馬桶＋洗衣機）</p>',
+  knowledge:'圖瓦人是蒙古族一支，傳說為成吉思汗西征後裔，全中國僅2,500人。',
+  eggTitle:'觀魚台挑戰',
+  egg:'邊爬邊數階梯，是不是真的1,068級？攻頂合照象徵找到湖怪，數對的人獲得「人體計步器」！'
+})});
+
+PAGES.push({chapter:'每日行程', navLabel:'Day5 三灣→克拉瑪依', num:15, html: dayPage({
+  dayNum:'05', title:'三灣 → 布爾津 → 克拉瑪依', date:'9/25（五）', route:'白哈巴→喀納斯三灣→布爾津→克拉瑪依', carTime:'約6小時',
+  highlights:`<div class="highlight-grid">
+  <div class="highlight-card"><div class="hc-head">☁️ 神仙灣</div><p>清晨雲霧飄湖面，如仙境</p></div>
+  <div class="highlight-card"><div class="hc-head">🌙 月亮灣</div><p>S形河灣，喀納斯最經典畫面</p></div>
+  <div class="highlight-card"><div class="hc-head">🐉 臥龍灣</div><p>沙洲形似恐龍，仔細看龍頭龍尾</p></div>
+  <div class="highlight-card"><div class="hc-head">🎨 布爾津童話小鎮</div><p>俄式彩色建築，額爾齊斯河大橋必拍</p></div>
+  </div>`,
+  food:'<p>午餐布爾津餐廳；晚餐布爾津夜市烤狗魚＋格瓦斯</p>',
+  hotel:'<p><b>克拉瑪依景徽大飯店</b>（居然之家大學城店）<br>靜雅豪華雙床房，周邊大學城美食街</p>',
+  knowledge:'克拉瑪依是維吾爾語「黑色的油」，1955年發現中國第一個大油田，路邊還有磕頭機在抽油。',
+  eggTitle:'三灣打卡',
+  egg:'在三灣各拍一張「手指向河灣」照片，集滿三張傳群組，晚上夜市獲得免費烤魚一條！'
+})});
+
+PAGES.push({chapter:'每日行程', navLabel:'Day6 賽里木湖', num:16, html: dayPage({
+  dayNum:'06', title:'賽里木湖', date:'9/26（六）', route:'克拉瑪依→賽里木湖（自駕環湖）', carTime:'約6小時',
+  highlights:`<div class="highlight-grid">
+  <div class="highlight-card"><div class="hc-head">🚗 自駕環湖</div><p>約90公里，想停就停，金黃草地＋寶石藍湖水＋雪山白三色絕配</p></div>
+  <div class="highlight-card"><div class="hc-head">💠 湖水顏色</div><p>新疆海拔最高、面積最大的高山湖泊，能見度12公尺</p></div>
+  <div class="highlight-card"><div class="hc-head">🏹 點將台</div><p>傳說成吉思汗西征在此點將</p></div>
+  <div class="highlight-card"><div class="hc-head">🦢 湖邊天鵝</div><p>野生白天鵝，不餵食，遠遠拍照就好</p></div>
+  </div>`,
+  food:'<p>午餐服務區簡餐；晚餐賽湖景區餐廳高白鮭</p>',
+  hotel:'<p><b>山語湖度假飯店</b>（賽里木湖景區內）<br>青山丨臻品雙床房，窗戶打開就是湖！</p>',
+  knowledge:'賽里木湖被稱為「大西洋最後一滴眼淚」，水汽來自大西洋，西風帶一路吹到天山。',
+  eggTitle:'尋找天鵝',
+  egg:'沿湖尋找野生白天鵝！第一個拍到清晰照片的人，獲得「天鵝守護者」，隔天早餐加蛋一顆！'
+})});
+
+PAGES.push({chapter:'每日行程', navLabel:'Day7 賽湖日出→奎屯', num:17, html: dayPage({
+  dayNum:'07', title:'賽湖日出 → 奎屯', date:'9/27（日）', route:'賽里木湖日出→二進賽湖→奎屯', carTime:'約5小時',
+  highlights:`<div class="highlight-grid">
+  <div class="highlight-card wide"><div class="hc-head">🌅 賽里木湖日出（約07:30）</div><p>太陽從雪山後升起，湖面金黃→粉色→藍色，建議全員早起，不看會後悔！</p></div>
+  <div class="highlight-card"><div class="hc-head">🪞 二進賽湖</div><p>清晨無風時湖面像鏡子，雪山倒影超清楚</p></div>
+  <div class="highlight-card"><div class="hc-head">🌉 果子溝大橋</div><p>車行經過，巨大斜張橋橫跨峽谷</p></div>
+  </div>`,
+  food:'<p>午餐服務區；晚餐奎屯椒麻雞＋烤羊排</p>',
+  hotel:'<p><b>維也納國際飯店</b>（奎屯驛馬巷文化街區店）<br>高級雙床房，晚上可逛文創街區</p>',
+  knowledge:'賽里木湖是構造陷落湖，湖水主要來自雪山融水，水溫低，不要跳下去游泳！',
+  eggTitle:'打水漂大賽',
+  egg:'湖邊撿扁平小石頭，比賽誰打水漂最多次！冠軍獲得「賽湖漂王」稱號。'
+})});
+
+PAGES.push({chapter:'每日行程', navLabel:'Day8-9 丹霞→回家', num:18, html: dayPage({
+  dayNum:'08', title:'丹霞 → 回家', date:'9/28（一）–9/29（二）', route:'奎屯→S101丹霞→肯斯瓦特→烏魯木齊→回程', carTime:'約4小時',
+  highlights:`<div class="highlight-grid">
+  <div class="highlight-card"><div class="hc-head">🎨 S101百里丹霞</div><p>「天山地理畫廊」，紅橙黃綠灰紫像打翻調色盤</p></div>
+  <div class="highlight-card"><div class="hc-head">💧 肯斯瓦特水庫</div><p>碧綠湖水鑲嵌在彩色丹霞中</p></div>
+  <div class="highlight-card wide"><div class="hc-head">✈️ 回程提醒</div><p>烏魯木齊機場安檢嚴格，提前3小時到機場；香港轉機僅1小時，下飛機快步走、不要逛！</p></div>
+  </div>`,
+  food:'<p>午餐途中拌麵；晚餐烏魯木齊最後一餐，想吃什麼點什麼！</p>',
+  eggTitle:'丹霞調色盤 ＋ 回憶小卡',
+  egg:'丹霞山壁前比出看到的顏色數量，最多者獲得「色彩偵探」！機場候機時每人寫下最難忘的一刻，回家後集結成紀念冊 💖'
+})});
+
+/* ============ 附錄 ============ */
+
+PAGES.push({chapter:'附錄', navLabel:'常用語對照表', num:19, html:`
+<h1 class="page-title">新疆常用語對照表${SQUIGGLE_SVG}<small>學幾句，當地人會對你超好！</small></h1>
+<table><tr><th>中文</th><th>維吾爾語（諧音）</th><th>哈薩克語（諧音）</th></tr>
+<tr><td>您好</td><td>亞克西木斯孜</td><td>撒列滅特斯別</td></tr>
+<tr><td>謝謝</td><td>熱合買提</td><td>拉赫滅特</td></tr>
+<tr><td>多少錢？</td><td>坎且普爾</td><td>康夏圖拉迪</td></tr>
+<tr><td>好吃！</td><td>麥孜力克</td><td>丹地</td></tr>
+<tr><td>再見</td><td>霍西</td><td>薩烏波令孜</td></tr>
+<tr><td>不要辣</td><td>阿奇克斯孜</td><td>阿什耶滅斯</td></tr>
+<tr><td>廁所在哪？</td><td>哈潔特哈納乃代</td><td>達列特哈納卡伊達</td></tr>
+</table>
+<div class="egg-task"><div class="egg-label">📌 彩蛋任務：語言天才</div>學一句對當地人說！如果對方笑了，代表說得很標準，誰讓最多人笑，獲得「語言天才」稱號！</div>
+`});
+
+PAGES.push({chapter:'附錄', navLabel:'彩蛋任務總表', num:20, html:`
+<h1 class="page-title">每日驚喜彩蛋總表${SQUIGGLE_SVG}<small>全旅程10大任務一次看清楚</small></h1>
+<table><tr><th>#</th><th>任務</th><th>內容</th><th>獎勵</th></tr>
+<tr><td>1</td><td>轉機美食家</td><td>香港機場蛋撻+凍檸茶合照</td><td>轉機達人</td></tr>
+<tr><td>2</td><td>地名收集王</td><td>拍5個地名路牌</td><td>新疆地名通</td></tr>
+<tr><td>3</td><td>民族觀察家</td><td>拍4個不同民族合照</td><td>北疆民族達人</td></tr>
+<tr><td>4</td><td>美食獵人</td><td>烤包子+格瓦斯+數羊肉串</td><td>羊肉串之王</td></tr>
+<tr><td>5</td><td>沙漠跳跳虎</td><td>沙漠跳躍照比賽</td><td>沙漠跳跳虎</td></tr>
+<tr><td>6</td><td>秋色收集</td><td>撿最美落葉貼手冊</td><td>秋色收藏家</td></tr>
+<tr><td>7</td><td>觀魚台挑戰</td><td>數階梯+攻頂手指照</td><td>人體計步器</td></tr>
+<tr><td>8</td><td>三灣打卡</td><td>集滿三灣手指照</td><td>三灣達人</td></tr>
+<tr><td>9</td><td>尋找天鵝</td><td>拍到賽湖天鵝</td><td>天鵝守護者</td></tr>
+<tr><td>10</td><td>回憶小卡</td><td>寫下最難忘時刻</td><td>無價回憶</td></tr>
+</table>
+<div class="callout">任務自由參加，完成後在群組回報，回程飛機上頒發稱號，可寫在登機證背面留念！</div>
+<h1 class="page-title" style="margin-top:30px; font-size:24px;">開始你的北疆大冒險吧！</h1>
+`});
+
+// ---------- RENDER SIDEBAR ----------
+const sidebar = document.getElementById('sidebar');
+let sidebarHTML = `<div class="sidebar-brand">北疆金秋手冊<span>NORTH XINJIANG GUIDE</span></div>`;
+let lastChapter = null;
+PAGES.forEach((p, i) => {
+  if(p.chapter !== lastChapter){
+    sidebarHTML += `<div class="chapter-label">${p.chapter}</div>`;
+    lastChapter = p.chapter;
+  }
+  sidebarHTML += `<div class="nav-item" data-idx="${i}"><span class="num">${p.num || '◆'}</span><span>${p.navLabel}</span></div>`;
+});
+sidebar.innerHTML = sidebarHTML;
+
+// ---------- RENDER BOOK ----------
+const book = document.getElementById('book');
+book.innerHTML = PAGES.map((p, i) => `
+  <div class="page-card" data-idx="${i}">
+    ${p.isCover ? p.html : `
+      <div class="page-scroll">
+        <div class="page-topbar"><span>北疆金秋大冒險</span><span class="chip">${p.chapter}</span></div>
+        ${p.html}
+      </div>
+    `}
+  </div>
+`).join('');
+
+// flip-card click handling
+book.addEventListener('click', (e) => {
+  const card = e.target.closest('.flip-card');
+  if(card) card.classList.toggle('flipped');
+});
+
+// ---------- NAVIGATION LOGIC ----------
+let current = 0;
+const cards = document.querySelectorAll('.page-card');
+const navItems = document.querySelectorAll('.nav-item');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const pageCounter = document.getElementById('pageCounter');
+
+function goTo(idx){
+  if(idx < 0 || idx >= PAGES.length) return;
+  cards.forEach((c, i) => {
+    c.classList.remove('active','prev');
+    if(i === idx) c.classList.add('active');
+    else if(i < idx) c.classList.add('prev');
+  });
+  navItems.forEach(n => n.classList.toggle('active', parseInt(n.dataset.idx) === idx));
+  pageCounter.textContent = `${idx+1} / ${PAGES.length}`;
+  prevBtn.disabled = idx === 0;
+  nextBtn.disabled = idx === PAGES.length - 1;
+  current = idx;
+  const activeNav = document.querySelector('.nav-item.active');
+  if(activeNav) activeNav.scrollIntoView({block:'nearest'});
+  const scrollEl = cards[idx].querySelector('.page-scroll');
+  if(scrollEl) scrollEl.scrollTop = 0;
+}
+
+navItems.forEach(item => {
+  item.addEventListener('click', () => {
+    goTo(parseInt(item.dataset.idx));
+    if(window.innerWidth <= 900) document.getElementById('sidebar').classList.remove('open');
+  });
+});
+prevBtn.addEventListener('click', () => goTo(current - 1));
+nextBtn.addEventListener('click', () => goTo(current + 1));
+document.addEventListener('keydown', (e) => {
+  if(e.key === 'ArrowRight') goTo(current + 1);
+  if(e.key === 'ArrowLeft') goTo(current - 1);
+});
+document.getElementById('mobileToggle').addEventListener('click', () => {
+  document.getElementById('sidebar').classList.toggle('open');
+});
+
+goTo(0);
+
+</script>
+</body>
+</html>
+
