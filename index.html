@@ -1,690 +1,215 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
-  <title>北疆金秋 · 旅行手冊</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+// ---------- mascot (small corner decoration, reused across content pages) ----------
+const MASCOT_CAMEL = `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<ellipse cx="50" cy="80" rx="34" ry="8" fill="#2E2418" opacity="0.08"/>
+<path d="M20 78 Q18 55 30 50 Q28 40 36 35 Q34 28 42 26 Q44 18 52 20 Q58 14 64 20 Q70 18 70 26 Q76 30 72 38 Q80 44 76 54 Q84 60 78 70 L76 78 Z" fill="#E8A23D"/>
+<circle cx="66" cy="30" r="3.2" fill="#2E2418"/>
+<path d="M28 78 L26 90 M34 78 L33 90 M64 78 L63 90 M70 78 L72 90" stroke="#C97F1F" stroke-width="5" stroke-linecap="round"/>
+</svg>`;
 
-    body {
-      background-color: #f7f3eb;
-      font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', system-ui, -apple-system, sans-serif;
-      color: #2c3e2f;
-      padding: 0 0 40px 0;
-    }
+// ---------- helper: one flat-illustration person ----------
+function person(x, bodyColor, hairColor, hairStyle, armUp, skin){
+  skin = skin || '#F2C29A';
+  const armR = armUp ? `M${x+34} 150 Q${x+50} 118 ${x+40} 100` : `M${x+34} 150 Q${x+42} 168 ${x+34} 182`;
+  let hair = '';
+  if(hairStyle === 'twin'){ // twin ponytails (daughter)
+    hair = `<circle cx="${x-4}" cy="70" r="9" fill="${hairColor}"/><circle cx="${x+34}" cy="70" r="9" fill="${hairColor}"/><path d="M${x-2} 48 Q${x+15} 30 ${x+32} 48 Q${x+34} 66 ${x+15} 68 Q${x-4} 66 ${x-2} 48Z" fill="${hairColor}"/>`;
+  } else if(hairStyle === 'pony'){ // single ponytail (daughter)
+    hair = `<path d="M${x+30} 55 Q${x+48} 60 ${x+42} 85" stroke="${hairColor}" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M${x-2} 48 Q${x+15} 28 ${x+32} 48 Q${x+34} 66 ${x+15} 68 Q${x-4} 66 ${x-2} 48Z" fill="${hairColor}"/>`;
+  } else if(hairStyle === 'bob'){ // mom bob
+    hair = `<path d="M${x-4} 50 Q${x+15} 26 ${x+34} 50 Q${x+36} 74 ${x+15} 72 Q${x-6} 74 ${x-4} 50Z" fill="${hairColor}"/>`;
+  } else if(hairStyle === 'bun'){ // mom bun
+    hair = `<circle cx="${x+15}" cy="34" r="8" fill="${hairColor}"/><path d="M${x-3} 50 Q${x+15} 30 ${x+33} 50 Q${x+34} 66 ${x+15} 66 Q${x-4} 66 ${x-3} 50Z" fill="${hairColor}"/>`;
+  } else if(hairStyle === 'short'){ // dad short hair
+    hair = `<path d="M${x-4} 48 Q${x+15} 28 ${x+34} 48 Q${x+33} 56 ${x+15} 56 Q${x-3} 56 ${x-4} 48Z" fill="${hairColor}"/>`;
+  } else if(hairStyle === 'cap'){ // dad cap
+    hair = `<path d="M${x-6} 50 Q${x+15} 26 ${x+36} 50 L${x+40} 54 Q${x+15} 44 ${x-10} 54 Z" fill="${hairColor}"/>`;
+  }
+  return `<g>
+    <ellipse cx="${x+15}" cy="196" rx="30" ry="7" fill="#2E2418" opacity="0.10"/>
+    <path d="${armR}" stroke="${skin}" stroke-width="11" stroke-linecap="round" fill="none"/>
+    <path d="M${x-4} 150 Q${x-16} 172 ${x-6} 190" stroke="${skin}" stroke-width="11" stroke-linecap="round" fill="none"/>
+    <path d="M${x-6} 98 Q${x-14} 130 ${x-2} 160 L${x+32} 160 Q${x+44} 130 ${x+36} 98 Q${x+15} 88 ${x-6} 98Z" fill="${bodyColor}"/>
+    <rect x="${x-2}" y="152" width="14" height="34" rx="6" fill="#3a3126"/>
+    <rect x="${x+18}" y="152" width="14" height="34" rx="6" fill="#3a3126"/>
+    <circle cx="${x+15}" cy="70" r="24" fill="${skin}"/>
+    ${hair}
+    <circle cx="${x+7}" cy="72" r="2.4" fill="#2E2418"/>
+    <circle cx="${x+23}" cy="72" r="2.4" fill="#2E2418"/>
+    <path d="M${x+8} 80 Q${x+15} 85 ${x+22} 80" stroke="#AC3F26" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+  </g>`;
+}
 
-    /* 三主色：大地棕 #8b6b4a · 秋葉金 #d9a34a · 天空藍 #648f9e */
-    .container {
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 0 16px 20px;
-    }
+const FAMILY_ILLUSTRATION = `
+<svg viewBox="0 0 800 230" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto; display:block;">
+  <ellipse cx="400" cy="215" rx="420" ry="30" fill="#3f5a3a" opacity="0.55"/>
+  ${person(60, '#D1573A', '#3a2a1e', 'short', false)}
+  ${person(140, '#E8A23D', '#5c3a22', 'bob', false)}
+  ${person(230, '#E8785A', '#2e2418', 'twin', true)}
+  ${person(430, '#3D7EA6', '#402d1f', 'pony', true)}
+  ${person(540, '#F0C34E', '#6b4226', 'bun', false)}
+  ${person(620, '#5C8253', '#2e2418', 'cap', false)}
+</svg>`;
 
-    /* 標題與導航 */
-    .hero {
-      background: linear-gradient(145deg, #648f9e 0%, #8b6b4a 100%);
-      padding: 28px 20px 22px;
-      border-radius: 0 0 40px 40px;
-      margin: 0 -16px 28px -16px;
-      box-shadow: 0 8px 20px rgba(100, 80, 60, 0.15);
-      color: white;
-      text-align: center;
-    }
+// ---------- PAGE DATA ----------
+const PAGES = [];
 
-    .hero h1 {
-      font-size: 2.4rem;
-      font-weight: 400;
-      letter-spacing: 6px;
-      word-break: break-word;
-    }
-
-    .hero h1 small {
-      display: block;
-      font-size: 1.2rem;
-      letter-spacing: 4px;
-      opacity: 0.85;
-      font-weight: 300;
-      margin-top: 8px;
-    }
-
-    .hero .meta {
-      margin-top: 14px;
-      font-size: 1rem;
-      opacity: 0.9;
-      border-top: 1px solid rgba(255, 255, 255, 0.2);
-      padding-top: 14px;
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 14px 26px;
-    }
-
-    .nav-toc {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 8px 12px;
-      margin: 12px 0 22px 0;
-    }
-
-    .nav-toc a {
-      background: #e8dfd4;
-      padding: 6px 16px;
-      border-radius: 40px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: #4d3e2e;
-      text-decoration: none;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-      transition: 0.15s;
-      border: 1px solid #d6cbbc;
-    }
-
-    .nav-toc a:hover {
-      background: #d9a34a;
-      color: #2c3e2f;
-      border-color: #c28e3a;
-      box-shadow: 0 4px 8px rgba(180, 130, 50, 0.15);
-    }
-
-    .section-title {
-      font-size: 1.8rem;
-      font-weight: 300;
-      letter-spacing: 3px;
-      padding-bottom: 6px;
-      margin: 32px 0 18px 0;
-      border-bottom: 3px solid #d9a34a;
-      color: #4d3e2e;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .section-title span {
-      background: #d9a34a;
-      color: #2c3e2f;
-      font-size: 1rem;
-      padding: 2px 12px;
-      border-radius: 40px;
-      font-weight: 400;
-    }
-
-    .card {
-      background: white;
-      border-radius: 28px;
-      padding: 22px 22px 26px;
-      margin-bottom: 28px;
-      box-shadow: 0 6px 16px rgba(139, 107, 74, 0.08);
-      border: 1px solid #e6ddd2;
-      transition: 0.1s ease;
-    }
-
-    .card-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 24px;
-    }
-
-    @media (min-width: 720px) {
-      .card-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-      .card-grid .card:last-child {
-        grid-column: 1 / -1;
-      }
-    }
-
-    .card h3 {
-      font-size: 1.5rem;
-      font-weight: 400;
-      color: #648f9e;
-      letter-spacing: 1px;
-      margin-bottom: 12px;
-      border-left: 5px solid #d9a34a;
-      padding-left: 14px;
-    }
-
-    .card h4 {
-      font-size: 1.15rem;
-      font-weight: 500;
-      margin: 16px 0 6px 0;
-      color: #4d3e2e;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .card h4 i {
-      font-style: normal;
-      background: #648f9e;
-      color: white;
-      font-size: 0.7rem;
-      padding: 0 8px;
-      border-radius: 30px;
-    }
-
-    .badge {
-      display: inline-block;
-      background: #d9a34a;
-      color: #2c3e2f;
-      font-size: 0.7rem;
-      padding: 2px 12px;
-      border-radius: 40px;
-      font-weight: 500;
-      letter-spacing: 0.5px;
-    }
-
-    .badge-blue {
-      background: #648f9e;
-      color: white;
-    }
-
-    .badge-brown {
-      background: #8b6b4a;
-      color: white;
-    }
-
-    ul, .list {
-      padding-left: 22px;
-      margin: 8px 0 4px;
-      line-height: 1.7;
-    }
-
-    li {
-      margin-bottom: 4px;
-    }
-
-    .two-col {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px 20px;
-    }
-
-    @media (max-width: 500px) {
-      .two-col {
-        grid-template-columns: 1fr;
-        gap: 6px;
-      }
-    }
-
-    .food-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    @media (max-width: 500px) {
-      .food-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .food-item {
-      background: #f7f3eb;
-      border-radius: 18px;
-      padding: 10px 14px;
-      border-left: 6px solid #d9a34a;
-    }
-
-    .food-item strong {
-      display: block;
-      font-size: 1rem;
-      color: #4d3e2e;
-    }
-
-    .food-item small {
-      opacity: 0.8;
-      font-size: 0.85rem;
-    }
-
-    .star {
-      color: #d9a34a;
-      letter-spacing: 2px;
-    }
-
-    .highlight {
-      background: #f0ebe3;
-      border-radius: 20px;
-      padding: 16px 20px;
-      margin: 12px 0 8px;
-      border-left: 8px solid #d9a34a;
-    }
-
-    .highlight-gold {
-      background: #faf1e0;
-      border-left-color: #d9a34a;
-    }
-
-    .highlight-blue {
-      background: #e5edef;
-      border-left-color: #648f9e;
-    }
-
-    .egg {
-      background: #fcf3e3;
-      border-radius: 40px;
-      padding: 12px 18px;
-      margin-top: 16px;
-      border: 1px dashed #d9a34a;
-      display: inline-block;
-      width: 100%;
-    }
-
-    .egg strong {
-      color: #8b6b4a;
-    }
-
-    .table-wrap {
-      overflow-x: auto;
-      margin: 10px 0;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.9rem;
-      background: #faf8f5;
-      border-radius: 20px;
-      overflow: hidden;
-    }
-
-    th {
-      background: #648f9e;
-      color: white;
-      padding: 8px 10px;
-      text-align: left;
-      font-weight: 400;
-    }
-
-    td {
-      padding: 8px 10px;
-      border-bottom: 1px solid #e6ddd2;
-    }
-
-    tr:last-child td {
-      border-bottom: none;
-    }
-
-    .page-break {
-      border-top: 2px dotted #d9a34a;
-      margin: 40px 0 16px;
-      opacity: 0.3;
-    }
-
-    footer {
-      text-align: center;
-      margin-top: 40px;
-      color: #8b6b4a;
-      font-size: 0.9rem;
-      letter-spacing: 1px;
-      border-top: 1px solid #d6cbbc;
-      padding-top: 24px;
-      opacity: 0.7;
-    }
-
-    /* 打卡清單 */
-    .checklist {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6px 18px;
-    }
-
-    @media (max-width: 550px) {
-      .checklist {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .checklist label {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.95rem;
-      padding: 4px 0;
-    }
-
-    .checklist input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      accent-color: #d9a34a;
-    }
-
-    .inline-icon {
-      display: inline-block;
-      margin-right: 6px;
-    }
-  </style>
-</head>
-<body>
-<div class="container">
-
-  <!-- 封面 -->
-  <div class="hero">
-    <h1>🏔️ 北疆金秋 <small>9/20 – 9/29 · 六人黃金組合</small></h1>
-    <div class="meta">
-      <span>✈️ 桃園 → 香港 → 烏魯木齊</span>
-      <span>🚗 2,500 km · 環繞台灣3圈</span>
-      <span>🍂 金秋 · 雪山 · 湖泊 · 草原</span>
-    </div>
+/* ============ COVER ============ */
+PAGES.push({chapter:'封面', navLabel:'封面', num:'', isCover:true, html:`
+<div class="cover-page">
+  <div class="cover-block-sky"></div>
+  <div class="cover-block-gold"></div>
+  <div class="cover-block-terra"></div>
+  <div class="cover-dot" style="width:14px;height:14px;background:#fff;top:18%;right:12%;"></div>
+  <div class="cover-dot" style="width:8px;height:8px;background:#fff;top:30%;right:22%;"></div>
+  <div class="cover-dot" style="width:10px;height:10px;background:var(--sky);top:60%;left:8%;"></div>
+  <div class="cover-content">
+    <div class="cover-sub">N O R T H&nbsp; X I N J I A N G&nbsp; ·&nbsp; G O L D E N&nbsp; A U T U M N</div>
+    <h1>北疆金秋<br>大冒險</h1>
+    <div class="cover-dates">2026.09.20 — 09.29</div>
   </div>
+  <div class="cover-illustration">${FAMILY_ILLUSTRATION}</div>
+</div>`});
 
-  <!-- 目錄導航 -->
-  <div class="nav-toc">
-    <a href="#sec-prep">行前須知</a>
-    <a href="#sec-culture">新疆小教室</a>
-    <a href="#sec-food">美食購物</a>
-    <a href="#sec-weather">天氣穿搭</a>
-    <a href="#sec-checklist">必備清單</a>
-    <a href="#sec-map">每日行程</a>
-    <a href="#sec-eggs">彩蛋總表</a>
-  </div>
+/* ============ PART 1：行前須知 ============ */
 
-  <!-- ============ PART 1 行前須知 ============= -->
-  <div id="sec-prep" class="section-title">📋 行前須知 <span>出發前必看</span></div>
+PAGES.push({chapter:'行前須知', navLabel:'證件・航班・網路', num:1, html:`
+<h1 class="page-title">台灣人出發前必看！<small>證件、航班、網路、轉機</small></h1>
+<h2 class="section-title">📄 證件三寶（缺一不可）</h2>
+<table><tr><th>證件</th><th>檢查重點</th><th>誰負責</th></tr>
+<tr><td>台胞證</td><td>效期是否超過 2027/3/31？（入境後至少6個月）</td><td>所有人各自檢查</td></tr>
+<tr><td>護照</td><td>效期是否超過 2027/3/31？</td><td>所有人各自檢查</td></tr>
+<tr><td>身分證正本</td><td>辦邊防證要用！（白哈巴需要）白哈巴在中哈邊境，需要旅行社統一辦理的「邊防證」，出發前把身分證正本交給導遊，用完會歸還。</td><td>所有人帶</td></tr>
+</table>
 
-  <div class="card">
-    <h3>🧾 證件三寶</h3>
-    <div class="two-col">
-      <div><span class="badge">台胞證</span> 效期 > 2027/03/31</div>
-      <div><span class="badge">護照</span> 效期 > 2027/03/31</div>
-      <div><span class="badge">身分證正本</span> 辦邊防證（白哈巴）</div>
-    </div>
-    <div class="highlight highlight-blue" style="margin-top:12px;">
-      <strong>🛂 邊防證：</strong> 旅行社統一辦理，需身分證正本，用完歸還。
-    </div>
-    <div style="margin-top:12px;">
-      <span class="badge badge-blue">📱 網路</span> LINE/FB 需 VPN（快帆/穿梭）<br>
-      建議購買 eSIM（中港澳方案）或烏魯木齊機場「中國移動」預付卡。<br>
-      <span class="badge badge-brown">💬 聯絡</span> 用微信 WeChat，導遊會建群組。
-    </div>
-    <div class="egg">
-      <strong>🥚 轉機美食家：</strong> 香港機場5小時，找到檀島/翠華，買蛋撻＋凍檸茶合照！
-    </div>
-  </div>
+<h2 class="section-title">📱 網路與通訊</h2>
+<p>LINE、Facebook、Instagram 在新疆不能用（被擋了），需要 <b>VPN</b>，建議出發前先下載安裝並測試能用再出發。手機網路建議買 <b>eSIM（中港澳方案）</b>，或到烏魯木齊機場買中國移動預付卡（約100元人民幣/10GB）。跟家人報平安用 <b>微信</b>，台灣家人先下載註冊、加好友；導遊會建微信群組公告所有行程訊息。</p>
 
-  <!-- ============ 文化小教室 ============= -->
-  <div id="sec-culture" class="section-title">🏕️ 新疆小教室 <span>土地·歷史·人</span></div>
+<h2 class="section-title">✈️ 去程航班資訊</h2>
+<div class="flight-card">
+  <div class="flight-route">桃園 T1 <span class="fr-arrow">✈</span> 香港 T1 <span class="flight-time">12:00 → 13:50</span></div>
+  <div class="flight-meta"><span>大灣區航空 HB703</span><span>機型 73A</span><span>飛行 1h50m</span><span>報到劃位</span><span>轉機 5 小時</span><span>手提 7KG</span><span>托運 20KG</span><span>行李直掛</span></div>
+</div>
+<div class="flight-card">
+  <div class="flight-route">香港 T2 <span class="fr-arrow">✈</span> 烏魯木齊 <span class="flight-time">19:35 → 01:15+1</span></div>
+  <div class="flight-meta"><span>大灣區航空 HB862</span><span>機型 7M9</span><span>飛行 5h40m</span><span>座位 27JKL、28JKL</span><span>手提 7KG</span><span>托運 20KG</span><span>行李直掛</span><span>機上不供餐，記得買點吃的</span></div>
+</div>
+<div class="callout">轉機提醒：兩段航班行李可直掛到烏魯木齊，不用在香港領行李再托運。但機上餐都沒有，轉機時記得吃飽、也帶點乾糧上機！</div>
 
-  <div class="card-grid">
-    <div class="card">
-      <h3>🗺️ 47倍大的土地</h3>
-      <p><span class="badge">一句話</span> 新疆 = 台灣的47倍大！你們走2,500公里 ≈ 繞台灣3圈。</p>
-      <div class="highlight" style="margin:10px 0;">
-        <strong>⛰️ 地形口訣：三山夾兩盆</strong><br>
-        阿爾泰山（金秋森林）→ 準噶爾盆地（沙漠公路）→ 天山（賽里木湖）
-      </div>
-      <h4>📍 地名小知識</h4>
-      <ul>
-        <li><strong>烏魯木齊</strong> 蒙古語「優美的牧場」</li>
-        <li><strong>阿勒泰</strong> 蒙古語「金山」</li>
-        <li><strong>喀納斯</strong> 蒙古語「美麗而神秘的湖」</li>
-        <li><strong>賽里木</strong> 哈薩克語「祝福」</li>
-        <li><strong>克拉瑪依</strong> 維吾爾語「黑色的油」</li>
-      </ul>
-    </div>
+<div class="egg-task"><div class="egg-label">📌 彩蛋任務：轉機美食家</div>在香港機場5小時，找到「檀島咖啡」或「翠華餐廳」，買一個蛋撻＋凍檸茶組合，全員拍一張「偽香港旅遊照」！第一位在群組分享照片的人，獲得「轉機達人」稱號。</div>
+`});
 
-    <div class="card">
-      <h3>📜 3分鐘歷史</h3>
-      <p><span class="badge">🐫 古代</span> 絲綢之路心臟，駱駝隊帶回葡萄、胡蘿蔔、琵琶。</p>
-      <p><span class="badge badge-blue">🛠️ 近代</span> 生產建設兵團開墾修路，S21、S101都是他們挖的。</p>
-      <p><span class="badge badge-brown">一句話</span> 「漢朝設都護，清朝取名字，兵團開公路，現在我們來旅遊！」</p>
-    </div>
+PAGES.push({chapter:'行前須知', navLabel:'行程總覽・路線圖', num:2, html:`
+<h1 class="page-title">行程總覽<small>9天路線一次看清楚，約2,500公里 ≈ 繞台灣3圈</small></h1>
+<table>
+<tr><th>日期</th><th>路線</th><th>住宿</th><th>轉機/車程</th></tr>
+<tr><td>9/20（日）</td><td>桃園機場 → 香港機場</td><td>—</td><td>香港轉機 5h</td></tr>
+<tr><td>9/21（一）</td><td>香港 → 烏魯木齊</td><td>烏魯木齊百麗酒店</td><td>1h</td></tr>
+<tr><td>9/22（二）</td><td>烏魯木齊→S21沙漠公路→克拉美麗→烏倫古湖→阿勒泰</td><td>阿勒泰尋雪‧拾光民宿</td><td>約7h</td></tr>
+<tr><td>9/23（三）</td><td>阿勒泰→阿禾公路→烏希里克→野卡峽→通巴森林→托勒海特</td><td>雍禾雅苑民宿</td><td>約5h</td></tr>
+<tr><td>9/24（四）</td><td>禾木→喀納斯湖→觀魚台→白哈巴</td><td>畫與·森民宿</td><td>—</td></tr>
+<tr><td>9/25（五）</td><td>白哈巴→喀納斯三灣→布爾津童話小鎮→克拉瑪依</td><td>克拉瑪依景徽大飯店</td><td>—</td></tr>
+<tr><td>9/26（六）</td><td>克拉瑪依→自駕環賽里木湖</td><td>山語湖度假飯店</td><td>約6h</td></tr>
+<tr><td>9/27（日）</td><td>賽里木湖日出→二進賽湖→奎屯</td><td>維也納國際飯店</td><td>約5h</td></tr>
+<tr><td>9/28（一）</td><td>奎屯→S101百里丹霞→肯斯瓦特→烏魯木齊機場</td><td>—</td><td>香港轉機 1h</td></tr>
+<tr><td>9/29（二）</td><td>香港 → 桃園機場</td><td>—</td><td>—</td></tr>
+</table>
 
-    <div class="card">
-      <h3>👨‍👩‍👧‍👦 四大民族</h3>
-      <ul>
-        <li><strong>漢族</strong> 城市鄰居，普通話帶新疆腔</li>
-        <li><strong>維吾爾族</strong> 巴扎老闆，烤肉高手，音樂超強</li>
-        <li><strong>哈薩克族</strong> 馬背民族，住白色氈房</li>
-        <li><strong>圖瓦人</strong> 全中國僅2,500人，喀納斯隱居者</li>
-      </ul>
-      <div class="egg">
-        <strong>🥚 民族觀察家：</strong> 拍下4個民族合照（先微笑徵求同意！）
-      </div>
-    </div>
-  </div>
+<h2 class="section-title">🗺️ 路線圖</h2>
+<div class="timeline">
+  <div class="timeline-step"><b>桃園 → 香港 → 烏魯木齊</b><div class="ts-desc">飛機抵達新疆首府，夜逛和田二街</div></div>
+  <div class="timeline-step"><b>往北：S21沙漠公路 → 阿勒泰</b><div class="ts-desc">穿越古爾班通古特沙漠，進入金山之城</div></div>
+  <div class="timeline-step"><b>阿禾公路 → 禾木／喀納斯／白哈巴</b><div class="ts-desc">金秋落葉松公路，深入中國「西北第一村」</div></div>
+  <div class="timeline-step"><b>布爾津童話小鎮 → 克拉瑪依</b><div class="ts-desc">俄式彩色小鎮，接著進入石油之城</div></div>
+  <div class="timeline-step"><b>賽里木湖</b><div class="ts-desc">大西洋最後一滴眼淚，自駕環湖看日出</div></div>
+  <div class="timeline-step"><b>奎屯 S101百里丹霞 → 烏魯木齊 → 回家</b><div class="ts-desc">天山地理畫廊收尾，飛回香港轉桃園</div></div>
+</div>
+`});
 
-  <!-- ============ 美食購物 ============= -->
-  <div id="sec-food" class="section-title">🍜 美食購物 <span>吃貨指南</span></div>
+PAGES.push({chapter:'行前須知', navLabel:'新疆小教室①地理', num:3, html:`
+<h1 class="page-title">新疆小教室①<small>47倍大的土地</small></h1>
+<p class="lead">一句話認識新疆：<b>台灣的47倍大！</b>你們這次9天走的距離約2,500公里，等於繞台灣3圈，車上記得準備零食、頸枕、行動電源。</p>
 
-  <div class="card">
-    <h3>🔥 必吃美食</h3>
-    <div class="food-grid">
-      <div class="food-item"><strong>烤包子</strong> 外酥內噴汁 <span class="star">⭐⭐⭐⭐⭐</span></div>
-      <div class="food-item"><strong>手抓飯</strong> 黃蘿蔔+羊肉 <span class="star">⭐⭐⭐⭐⭐</span></div>
-      <div class="food-item"><strong>大盤雞</strong> 4人一盤超滿足 <span class="star">⭐⭐⭐⭐⭐</span></div>
-      <div class="food-item"><strong>羊肉串</strong> 紅柳枝烤孜然香 <span class="star">⭐⭐⭐⭐⭐</span></div>
-      <div class="food-item"><strong>額河烤魚</strong> 布爾津夜市 <span class="star">⭐⭐⭐⭐</span></div>
-      <div class="food-item"><strong>高白鮭</strong> 賽里木湖特產 <span class="star">⭐⭐⭐⭐⭐</span></div>
-      <div class="food-item"><strong>椒麻雞</strong> 麻麻辣辣開胃 <span class="star">⭐⭐⭐⭐</span></div>
-      <div class="food-item"><strong>拌麵</strong> 手工拉麵Q彈 <span class="star">⭐⭐⭐⭐⭐</span></div>
-      <div class="food-item"><strong>酸奶</strong> 加糖吃 <span class="star">⭐⭐⭐⭐</span></div>
-      <div class="food-item"><strong>格瓦斯</strong> 蜂蜜汽水 <span class="star">⭐⭐⭐⭐</span></div>
-    </div>
+<h2 class="section-title">⛰️ 地形口訣：三山夾兩盆</h2>
+<div class="timeline">
+  <div class="timeline-step"><b>阿爾泰山</b><div class="ts-desc">金色森林，你們會去！</div></div>
+  <div class="timeline-step"><b>準噶爾盆地</b><div class="ts-desc">S21沙漠公路穿越於此</div></div>
+  <div class="timeline-step"><b>天山</b><div class="ts-desc">雪山媽媽，賽里木湖就在這裡</div></div>
+  <div class="timeline-step"><b>塔里木盆地・崑崙山</b><div class="ts-desc">太大、太遠，這次不去</div></div>
+</div>
 
-    <div class="highlight highlight-gold" style="margin-top:16px;">
-      <strong>⚠️ 清真餐廳3大守則</strong><br>
-      ❌ 不要提「豬肉」 · ❌ 不要帶豬肉製品 · ❌ 不要喝酒 · ✅ 用右手拿食物
-    </div>
+<h2 class="section-title">🏙️ 地名小知識</h2>
+<div class="highlight-grid">
+<div class="highlight-card"><div class="hc-head"><span class="hc-icon">🏞️</span>烏魯木齊</div><p>蒙古語「優美的牧場」，以前是草原，現在是新疆最大城市。</p></div>
+<div class="highlight-card"><div class="hc-head"><span class="hc-icon">⛏️</span>阿勒泰</div><p>蒙古語「金山」，山裡真的有黃金！路邊石頭可能是寶石。</p></div>
+<div class="highlight-card"><div class="hc-head"><span class="hc-icon">🌊</span>喀納斯</div><p>蒙古語「美麗而神秘的湖」，傳說有湖怪（其實是大魚）。</p></div>
+<div class="highlight-card"><div class="hc-head"><span class="hc-icon">🍀</span>賽里木</div><p>哈薩克語「祝福」，當地人說看到它會帶來好運。</p></div>
+<div class="highlight-card wide"><div class="hc-head"><span class="hc-icon">🛢️</span>克拉瑪依</div><p>維吾爾語「黑色的油」，地下全是石油！路邊「磕頭機」正在抽油。</p></div>
+</div>
+<div class="egg-task"><div class="egg-label">📌 彩蛋任務：地名收集王</div>拍下任何一個寫有以上地名的路牌、車站牌、門牌，集滿5個，回程飛機上獲得「新疆地名通」榮譽！</div>
+`});
 
-    <div style="margin-top:12px;">
-      <span class="badge">💰 現金</span> 每人帶2,000-3,000元人民幣（景區路邊只收現金）<br>
-      <span class="badge badge-blue">🎁 伴手禮</span> 葡萄乾（香妃）、紅棗、核桃、高白鮭罐頭、羊絨圍巾
-    </div>
-    <div class="egg">
-      <strong>🥚 美食獵人：</strong> 拍烤包子出爐 · 喝格瓦斯說出像台灣什麼飲料 · 統計誰吃最多羊肉串！
-    </div>
-  </div>
+PAGES.push({chapter:'行前須知', navLabel:'新疆小教室②歷史', num:4, html:`
+<h1 class="page-title">新疆小教室②<small>3分鐘讀完新疆歷史</small></h1>
+<div class="highlight-grid">
+<div class="highlight-card wide"><div class="hc-head"><span class="hc-icon">🐫</span>古代篇：駱駝的星光大道</div><p>兩千年前，新疆是絲綢之路的中段。長安出發的駱駝隊扛著絲綢、茶葉、瓷器往西走，回程帶回葡萄、胡蘿蔔、琵琶、胡琴——原來這些都是「進口貨」！你們走的北疆，古代叫「草原絲綢之路」，騎馬走的，比南疆那條沙漠路舒服多了，至少不會滿嘴沙。</p></div>
+<div class="highlight-card wide"><div class="hc-head"><span class="hc-icon">🏛️</span>近代篇：兵團叔叔的熱血故事</div><p>1950年代，一群解放軍叔叔脫下軍裝、拿起鋤頭，在新疆開墾種田、修路蓋城，叫做「生產建設兵團」。你們走的 S21沙漠公路、S101國防公路，都是他們當年一鏟一鏟挖出來的！公路邊的防沙網格，也是兵團叔叔發明來固定沙丘的。向兵團叔叔致敬！👨‍🌾</p></div>
+</div>
+<div class="callout">📜 一句話記住新疆歷史：<b>「漢朝設都護，清朝取名字，兵團開公路，現在我們來旅遊！」</b></div>
+`});
 
-  <!-- ============ 天氣穿搭 ============= -->
-  <div id="sec-weather" class="section-title">🌤️ 天氣穿搭 <span>洋蔥式4層</span></div>
+PAGES.push({chapter:'行前須知', navLabel:'新疆小教室③人文', num:5, html:`
+<h1 class="page-title">新疆小教室③<small>北疆住著這些人</small></h1>
+<div class="highlight-grid">
+<div class="highlight-card"><div class="hc-head"><span class="hc-icon">🏙️</span>漢族——城市裡的鄰居</div><p>長相、穿著跟我們差不多，說普通話（帶點新疆腔，尾音上揚，聽起來很熱情）。多在烏魯木齊、克拉瑪依等大城市，導遊、司機多半是漢族。</p></div>
+<div class="highlight-card"><div class="hc-head"><span class="hc-icon">🎵</span>維吾爾族——巴扎裡的老闆</div><p>深邃五官、捲髮，男生戴花帽「多帕」、女生穿鮮豔花裙。夜市、餐廳、烤肉攤都遇得到，烤肉技術世界一流，熱情又會做生意。</p></div>
+<div class="highlight-card"><div class="hc-head"><span class="hc-icon">🐴</span>哈薩克族——馬背上的牧羊人</div><p>騎馬、馴鷹、住白色圓頂氈房（像蒙古包但更圓更高）。阿勒泰草原、喀納斯、禾木路邊常見，豪爽又愛騎馬。</p></div>
+<div class="highlight-card"><div class="hc-head"><span class="hc-icon">🏘️</span>圖瓦人——喀納斯的隱居者</div><p>全中國只有2,500人！住尖頂木屋、吹蘆葦笛、唱「呼麥」。你們會住進他們的村子——禾木、喀納斯、白哈巴，低調又神秘。</p></div>
+</div>
+<div class="egg-task"><div class="egg-label">📌 彩蛋任務：民族觀察家</div>拍下遇到的不同民族人士（記得先微笑徵求同意！），集滿4個民族的合照，獲得「北疆民族達人」稱號！</div>
+`});
 
-  <div class="card">
-    <div class="table-wrap">
-      <table>
-        <tr><th>地點</th><th>白天高溫</th><th>夜晚低溫</th><th>溫差</th></tr>
-        <tr><td>烏魯木齊</td><td>22°C</td><td>10°C</td><td>12°C</td></tr>
-        <tr><td>阿勒泰</td><td>18°C</td><td>3°C</td><td>15°C</td></tr>
-        <tr><td>喀納斯/禾木</td><td>15°C</td><td>1°C</td><td>14°C</td></tr>
-        <tr><td>賽里木湖</td><td>13°C</td><td>0°C</td><td>13°C</td></tr>
-      </table>
-    </div>
-    <div class="highlight" style="margin:12px 0;">
-      <strong>🧅 洋蔥式穿搭（4層）</strong><br>
-      ① 發熱衣 → ② 羊毛衫/刷毛 → ③ 防風冲锋衣/輕羽絨 → ④ 毛帽+手套+圍巾
-    </div>
-    <div><span class="badge badge-blue">📸 黃金時段</span> 日出後2小時＋日落前2小時，光線最柔美。</div>
-    <div class="egg">
-      <strong>🥚 穿搭王：</strong> 每天投票選「最佳洋蔥穿搭」，得主負責買當日水果！
-    </div>
-  </div>
+PAGES.push({chapter:'行前須知', navLabel:'美食購物攻略', num:6, html:`
+<h1 class="page-title">北疆美食吃透透<small>＋ 購物禮儀</small></h1>
+<h2 class="section-title">🍖 必吃美食清單</h2>
+<table><tr><th>美食</th><th>特色</th><th>哪裡吃</th><th>推薦</th></tr>
+<tr><td>烤包子</td><td>方形酥皮，羊肉+洋蔥，外酥內噴汁</td><td>和田二街、路邊饢坑</td><td class="stars">★★★★★</td></tr>
+<tr><td>手抓飯</td><td>黃蘿蔔+羊肉+米飯燜煮，甜甜的</td><td>到處都有</td><td class="stars">★★★★★</td></tr>
+<tr><td>大盤雞</td><td>整盤雞肉+馬鈴薯+寬麵</td><td>新疆餐廳</td><td class="stars">★★★★★</td></tr>
+<tr><td>羊肉串</td><td>紅柳枝串大塊羊肉，孜然香噴噴</td><td>夜市、路邊攤</td><td class="stars">★★★★★</td></tr>
+<tr><td>饢餅</td><td>圓形大麵餅，芝麻香，放一週不壞</td><td>路邊饢攤（3-5元）</td><td class="stars">★★★★</td></tr>
+<tr><td>額河烤魚</td><td>冷水魚（狗魚/五道黑），肉質緊實</td><td>布爾津夜市</td><td class="stars">★★★★</td></tr>
+<tr><td>高白鮭</td><td>賽里木湖特產，肉嫩刺少</td><td>賽里木湖餐廳</td><td class="stars">★★★★★</td></tr>
+<tr><td>椒麻雞</td><td>雞絲涼拌花椒油，麻麻辣辣</td><td>奎屯、烏魯木齊</td><td class="stars">★★★★</td></tr>
+<tr><td>拌麵</td><td>手工拉麵+各種澆頭</td><td>到處都有</td><td class="stars">★★★★★</td></tr>
+<tr><td>酸奶</td><td>濃稠偏酸，加白砂糖吃</td><td>餐廳、超市</td><td class="stars">★★★★</td></tr>
+<tr><td>格瓦斯</td><td>蜂蜜發酵飲料，像甜甜汽水</td><td>布爾津夜市</td><td class="stars">★★★★</td></tr>
+<tr><td>奶疙瘩</td><td>硬硬乾奶酪，酸酸甜甜</td><td>牧區小賣部</td><td class="stars">★★★</td></tr>
+</table>
 
-  <!-- ============ 必備清單 ============= -->
-  <div id="sec-checklist" class="section-title">✅ 必備清單 <span>打勾再出發</span></div>
+<h2 class="section-title">⚠️ 清真餐廳3大守則</h2>
+<div class="callout red">不要提「豬肉」、不要帶豬肉製品（肉鬆、香腸留在飯店）、不要在清真餐廳喝酒。用右手拿食物、遞東西。</div>
 
-  <div class="card">
-    <h4>📂 證件財物</h4>
-    <div class="checklist">
-      <label><input type="checkbox"> 台胞證（效期OK）</label>
-      <label><input type="checkbox"> 護照（效期OK）</label>
-      <label><input type="checkbox"> 身分證正本</label>
-      <label><input type="checkbox"> 人民幣現金 2,000-3,000元</label>
-    </div>
-    <h4>👗 衣物鞋履</h4>
-    <div class="checklist">
-      <label><input type="checkbox"> 發熱衣(2-3件)</label>
-      <label><input type="checkbox"> 羊毛衫/刷毛(2-3件)</label>
-      <label><input type="checkbox"> 冲锋衣/防風外套</label>
-      <label><input type="checkbox"> 輕羽絨外套</label>
-      <label><input type="checkbox"> 毛帽+手套+圍巾</label>
-      <label><input type="checkbox"> 太陽眼鏡</label>
-      <label><input type="checkbox"> 登山鞋/運動鞋</label>
-      <label><input type="checkbox"> 一次性內褲+厚襪</label>
-    </div>
-    <h4>🧴 防曬保濕</h4>
-    <div class="checklist">
-      <label><input type="checkbox"> 防曬乳 SPF50+</label>
-      <label><input type="checkbox"> 保濕乳液/面霜</label>
-      <label><input type="checkbox"> 護唇膏（必備！）</label>
-      <label><input type="checkbox"> 面膜（每天一片）</label>
-    </div>
-    <h4>💊 藥品</h4>
-    <div class="checklist">
-      <label><input type="checkbox"> 暈車藥</label>
-      <label><input type="checkbox"> 腸胃藥</label>
-      <label><input type="checkbox"> 感冒藥/退燒藥</label>
-      <label><input type="checkbox"> OK繃/小護士</label>
-    </div>
-    <h4>📱 電子</h4>
-    <div class="checklist">
-      <label><input type="checkbox"> 手機（已裝VPN）</label>
-      <label><input type="checkbox"> 行動電源</label>
-      <label><input type="checkbox"> 充電線+多孔USB</label>
-      <label><input type="checkbox"> 轉接頭（三腳用）</label>
-    </div>
-    <div class="egg">
-      <strong>🥚 打包達人：</strong> 回程統計誰帶最少但最齊全，誰是遺忘之王！
-    </div>
-  </div>
+<h2 class="section-title">🛍️ 購物殺價，三步驟搞定</h2>
+<div class="steps-row">
+  <div class="step-card"><div class="step-num">1</div><p>老闆開價 100 元<br>你回：「50 賣不賣？」（面帶微笑）</p></div>
+  <div class="step-arrow">→</div>
+  <div class="step-card"><div class="step-num">2</div><p>老闆搖頭<br>你加一點：「60 啦，我買多一點」</p></div>
+  <div class="step-arrow">→</div>
+  <div class="step-card"><div class="step-num">3</div><p>老闆說「拿去吧拿去吧」<br>成交！約 70-80 元</p></div>
+</div>
+<p><b>現金建議：</b>每人帶 2,000–3,000元人民幣（約台幣9,000–13,500元），景區、路邊攤只收現金。</p>
 
-  <!-- ============ 每日行程 ============= -->
-  <div id="sec-map" class="section-title">🗺️ 每日行程 <span>9天路線</span></div>
+<h2 class="section-title">🎁 伴手禮買什麼？（點一下看介紹）</h2>
+<div class="souvenir-grid" id="souvenirGrid"></div>
+<div class="souvenir-detail" id="souvenirDetail">點選上方項目查看介紹 →</div>
 
-  <!-- 總覽地圖 -->
-  <div class="card">
-    <h3>🚗 總覽路線（2,500公里）</h3>
-    <div style="background:#e8dfd4; border-radius:40px; padding:20px 16px; text-align:center; font-weight:300; letter-spacing:2px; line-height:2;">
-      ｜桃園 ✈️ 香港 ✈️ 烏魯木齊｜<br>
-      ⬇️ S21沙漠公路 ⬇️<br>
-      ｜阿勒泰 → 阿禾公路 → 喀納斯/白哈巴｜<br>
-      ⬇️ 布爾津 ⬇️ 克拉瑪依 ⬇️<br>
-      ｜賽里木湖 → 奎屯（S101丹霞）｜<br>
-      ｜烏魯木齊 ✈️ 香港 ✈️ 桃園｜
-    </div>
-  </div>
+<div class="egg-task"><div class="egg-label">📌 彩蛋任務：美食獵人</div>拍下和田二街烤包子出爐瞬間 ＋ 喝格瓦斯後比喻像台灣什麼飲料 ＋ 統計誰吃羊肉串最多，冠軍獲得「羊肉串之王」！</div>
+`});
 
-  <!-- Day 0~1 -->
-  <div class="card">
-    <h3>📅 9/20-21 · 出發 ➔ 烏魯木齊</h3>
-    <p><span class="badge">🏨 住宿</span> 烏魯木齊百麗酒店（和田二街）英倫風書吧</p>
-    <p><span class="badge badge-blue">🍜 和田二街</span> 烤包子、手抓飯、大盤雞、羊肉串、水果攤</p>
-    <p><span class="badge badge-brown">🌙 晚上</span> 國際大巴扎（步行15分）或紅山公園夜景</p>
-    <div class="highlight highlight-gold">
-      <strong>🥚 烤包子挑戰：</strong> 拍下烤包子出爐瞬間，第一個分享到群組的人，隔天早餐大家請！
-    </div>
-  </div>
-
-  <!-- Day 2 -->
-  <div class="card">
-    <h3>📅 9/22 · S21沙漠公路 ➔ 阿勒泰</h3>
-    <p><span class="badge">🏜️ 亮點</span> S21沙漠公路、克拉美麗沙漠公園（騎駱駝/越野車）、烏倫古湖（雅丹地貌）</p>
-    <p><span class="badge badge-blue">🍴 晚餐</span> 阿勒泰市區—額河烤魚（冷水魚）</p>
-    <p><span class="badge badge-brown">🏨 住宿</span> 阿勒泰尋雪‧拾光民宿（面對將軍山）</p>
-    <div class="egg">
-      <strong>🥚 沙漠跳跳虎：</strong> 全員跳躍照，誰跳最高、表情最誇張獲勝！
-    </div>
-  </div>
-
-  <!-- Day 3 -->
-  <div class="card">
-    <h3>📅 9/23 · 阿禾公路 ➔ 托勒海特</h3>
-    <p><span class="badge">🌲 亮點</span> 阿禾公路（網紅公路）、烏希里克濕地、野卡峽、通巴森林、托勒海特大草原</p>
-    <p><span class="badge badge-blue">🍴 晚餐</span> 民宿土火鍋（羊肉鮮甜）</p>
-    <p><span class="badge badge-brown">🏨 住宿</span> 雍禾雅苑民宿（暖氣+智慧馬桶）</p>
-    <div class="egg">
-      <strong>🥚 秋色收集：</strong> 撿一片最金黃的落葉，貼在手冊上，寫下地點。
-    </div>
-  </div>
-
-  <!-- Day 4 -->
-  <div class="card">
-    <h3>📅 9/24 · 喀納斯 ➔ 白哈巴</h3>
-    <p><span class="badge">🌊 亮點</span> 喀納斯湖（變色湖）、觀魚台（1,068階）、白哈巴「西北第一村」</p>
-    <p><span class="badge badge-blue">🍴 晚餐</span> 手抓肉＋皮牙子洋蔥</p>
-    <p><span class="badge badge-brown">🏨 住宿</span> 畫與·森民宿（白哈巴景區內，有洗衣機！）</p>
-    <div class="egg">
-      <strong>🥚 觀魚台挑戰：</strong> 邊爬邊數階梯，攻頂拍「手指遠方」合照！數對的人獲「人體計步器」。
-    </div>
-  </div>
-
-  <!-- Day 5 -->
-  <div class="card">
-    <h3>📅 9/25 · 三灣 ➔ 布爾津 ➔ 克拉瑪依</h3>
-    <p><span class="badge">🌿 亮點</span> 神仙灣（晨霧）、月亮灣（S形）、臥龍灣（恐龍沙洲）、布爾津童話小鎮</p>
-    <p><span class="badge badge-blue">🍴 晚餐</span> 布爾津夜市—烤狗魚＋格瓦斯</p>
-    <p><span class="badge badge-brown">🏨 住宿</span> 克拉瑪依景徽大飯店（大學城美食街）</p>
-    <div class="egg">
-      <strong>🥚 三灣打卡：</strong> 三灣各拍一張「手指向河灣」照片，集滿傳群組，晚上免費烤魚！
-    </div>
-  </div>
-
-  <!-- Day 6 -->
-  <div class="card">
-    <h3>📅 9/26 · 自駕賽里木湖</h3>
-    <p><span class="badge">💎 亮點</span> 自駕環湖90km（金黃草地+寶石藍湖+雪山）、點將台、湖邊天鵝</p>
-    <p><span class="badge badge-blue">🍴 晚餐</span> 高白鮭（賽里木湖特產）</p>
-    <p><span class="badge badge-brown">🏨 住宿</span> 山語湖度假飯店（窗戶打開就是湖）</p>
-    <div class="egg">
-      <strong>🥚 尋找天鵝：</strong> 第一個拍到野生天鵝的人，獲「天鵝守護者」，隔天早餐加蛋！
-    </div>
-  </div>
-
-  <!-- Day 7 -->
-  <div class="card">
-    <h3>📅 9/27 · 賽湖日出 ➔ 奎屯</h3>
-    <p><span class="badge">🌅 亮點</span> 賽里木湖日出（07:30，金色湖面）、二進賽湖（補拍）、果子溝大橋</p>
-    <p><span class="badge badge-blue">🍴 晚餐</span> 奎屯—椒麻雞＋烤羊排</p>
-    <p><span class="badge badge-brown">🏨 住宿</span> 維也納國際飯店（驛馬巷文化街區）</p>
-    <div class="egg">
-      <strong>🥚 打水漂大賽：</strong> 早起者湖邊撿石頭比賽打水漂，冠軍「賽湖漂王」！
-    </div>
-  </div>
-
-  <!-- Day 8~9 -->
-  <div class="card">
-    <h3>📅 9/28-29 · S101丹霞 ➔ 回家</h3>
-    <p><span class="badge">🎨 亮點</span> S101百里丹霞（天山地理畫廊）、肯斯瓦特水庫（碧綠湖水+丹霞）</p>
-    <p><span class="badge badge-blue">🍴 午餐</span> 拌麵（過油肉/辣皮子）</p>
-    <p><span class="badge badge-brown">✈️ 提醒</span> 烏魯木齊機場安檢嚴格，提前3小時到；香港轉機僅1小時，快步走！</p>
-    <div class="egg">
-      <strong>🥚 丹霞調色盤：</strong> 全員比出看到的顏色數量，說最多者「色彩偵探」！
-    </div>
-    <div class="egg">
-      <strong>💌 回憶小卡：</strong> 機場每人寫下最難忘一刻，輪流分享，回家做成回憶紀念冊。
-    </div>
-  </div>
-
-  <!-- ============ 彩蛋總表 ============= -->
-  <div id="sec-eggs" class="section-title">🥚 彩蛋總表 <span>10大任務</span></div>
-
-  <div class="card">
-    <div class="table-wrap">
-      <table>
-        <tr><th>任務</th><th>內容</th><th>稱號</th></tr>
-        <tr><td>轉機美食家</td><td>香港機場蛋撻+凍檸茶合照</td><td>轉機達人</td></tr>
-        <tr><td>地名收集王</td><td>拍5個地名路牌</td><td>新疆地名通</td></tr>
-        <tr><td>民族觀察家</td><td>拍4個不同民族合照</td><td>北疆民族達人</td></tr>
-        <tr><td>美食獵人</td><td>烤包子出爐+格瓦斯+數羊肉串</td><td>羊肉串之王</td></tr>
-        <tr><td>沙漠跳跳虎</td><td>沙漠跳躍照比賽</td><td>沙漠跳跳虎</td></tr>
-        <tr><td>秋色收集</td><td>撿最美落葉貼手冊</td><td>秋色收藏家</td></tr>
-        <tr><td>觀魚台挑戰</td><td>數階梯+攻頂手指照</td><td>人體計步器</td></tr>
-        <tr><td>三灣打卡</td><td>集滿三灣手指照</td><td>三灣達人</td></tr>
-        <tr><td>尋找天鵝</td><td>拍到賽湖天鵝</td><td>天鵝守護者</td></tr>
-        <tr><td>回憶小卡</td><td>寫下最難忘時刻</td><td>無價回憶</td></tr>
-      </table>
-    </div>
-    <div class="highlight" style="margin-top:12px;">
-      <strong>📌 玩法：</strong> 自由參加，完成後群組回報，回程飛機上頒發稱號！
-    </div>
-  </div>
-
-  <!-- 廁所攻略＋生存指南 -->
-  <div class="section-title">🚻 生存指南 <span>廁所＋拉車</span></div>
-  <div class="card">
-    <h4>🚗 長途拉車必備5寶</h4>
-    <p>頸枕＋毛毯
+const SOUVENIRS = [
+  {name:'葡萄乾', desc:'推薦「香妃」品種，顆粒特別大，甜度高又不死甜。大巴扎裡秤重賣，記得先試吃再買。'},
+  {name:'若羌紅棗', desc:'新疆若羌產的紅棗肉厚超甜，個頭比台灣常見的大很多，適合直接送禮或煮甜湯。'},
+  {name:'紙皮核桃', desc:'殼薄到用手一捏就破，核桃仁飽滿香脆，大巴扎裡常見秤重零售。'},
+  {name:'高白鮭罐頭', desc:'賽里木湖特產魚種做成的罐頭，是其他地方買不到的獨特伴手禮，遊客中心有賣。'},
+  {name:'羊絨圍巾', desc:'輕、暖、花色漂亮，大巴扎裡選擇很多，購買前可以摸摸看材質、順便練習殺價。'}
+];
